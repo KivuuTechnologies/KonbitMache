@@ -1,0 +1,58 @@
+name: Promote Dev to Staging
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: promote-dev-to-staging
+  cancel-in-progress: false
+
+jobs:
+  create-staging-pull-request:
+    name: Create dev to staging pull request
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create pull request when one is not already open
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: openPullRequests } =
+              await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                base: 'staging',
+                head: `${context.repo.owner}:dev`,
+              });
+
+            if (openPullRequests.length > 0) {
+              core.notice(
+                `Staging pull request already exists: ` +
+                `#${openPullRequests[0].number}.`
+              );
+              return;
+            }
+
+            const { data: pullRequest } =
+              await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                base: 'staging',
+                head: 'dev',
+                title: 'chore: promote dev to staging',
+                body:
+                  'Automated promotion pull request created ' +
+                  'after changes reached `dev`.',
+              });
+
+            core.notice(
+              `Created staging pull request #${pullRequest.number}.`
+            );

@@ -1,0 +1,222 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f6f3ea;
+  --foreground: #1b1b13;
+  --surface: #fdfcf7;
+  --surface-muted: #ece8db;
+  --border: #d6d0bf;
+  --muted: #5c5949;
+
+  /* Accent / CTA - GREEN: primary action color (agricultural trust,
+     industry standard for food marketplaces, high contrast for adult users) */
+  --accent: #2e7d32;
+  --accent-strong: #1b5e20;
+
+  /* Warm brand accent - terracotta, reserved for promos/sales only,
+     NEVER for primary CTAs (avoids the muddy all-warm look) */
+  --warm: #c75228;
+  --warm-strong: #a8411e;
+
+  /* Semantic error color - deliberately distinct from the green CTA */
+  --danger: #b3261e;
+  --danger-bg: #fdecea;
+
+  /* Category colors (kreyòl naming) */
+  --fey: #2e7d32;
+  --dlo: #2b6cb0;
+  --soley: #b45309;
+  --papye: #f5efdc;
+
+  /* Livestock / animals - warm earthy tone */
+  --animal: #8a5a34;
+  --animal-bg: #efe6dc;
+}
+
+:root.dark {
+  --background: #12110c;
+  --foreground: #ede9e0;
+  --surface: #1b1a15;
+  --surface-muted: #26231b;
+  --border: #38342a;
+  --muted: #a39b8a;
+
+  --accent: #66bb6a;
+  --accent-strong: #4caf50;
+
+  --warm: #e8693f;
+  --warm-strong: #c04321;
+
+  --danger: #e0736f;
+  --danger-bg: #3a1e1c;
+
+  --fey: #81c784;
+  --dlo: #90caf9;
+  --soley: #d99a3f;
+  --papye: #26231b;
+
+  --animal: #c99a72;
+  --animal-bg: #2b2318;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /* Brand green - aliased to the semantic accent so `bg-te` / `text-te`
+     adapt automatically to light and dark mode */
+  --color-te: var(--accent);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-warm: var(--warm);
+  --color-warm-strong: var(--warm-strong);
+  /* Semantic status colors */
+  --color-success: var(--fey);
+  --color-info: var(--dlo);
+  --color-warning: var(--soley);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  /* Category colors */
+  --color-fey: var(--fey);
+  --color-dlo: var(--dlo);
+  --color-soley: var(--soley);
+  --color-papye: var(--papye);
+  --color-animal: var(--animal);
+  --color-animal-bg: var(--animal-bg);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  background: var(--background);
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Driver.js Custom Popover Styling */
+.driver-popover {
+  background-color: var(--surface) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 1rem !important;
+  padding: 1.25rem !important;
+  max-width: 22rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.25) !important;
+}
+
+.driver-overlay {
+  opacity: 0.58 !important;
+}
+
+.driver-popover-title {
+  font-size: 1.125rem !important;
+  font-weight: 800 !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.driver-popover-description {
+  font-size: 0.95rem !important;
+  color: var(--foreground) !important;
+  opacity: 0.9 !important;
+  line-height: 1.5 !important;
+}
+
+.driver-popover-close-btn {
+  color: var(--muted) !important;
+  border-radius: 0.75rem !important;
+}
+
+.driver-popover-close-btn:hover,
+.driver-popover-close-btn:focus {
+  color: var(--foreground) !important;
+  background-color: var(--surface-muted) !important;
+}
+
+.driver-popover-footer {
+  margin-top: 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.driver-popover-progress-text {
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: var(--accent) !important;
+}
+
+.driver-popover-navigation-btns {
+  display: flex !important;
+  gap: 0.5rem !important;
+}
+
+.driver-popover-next-btn,
+.driver-popover-prev-btn {
+  border-radius: 0.75rem !important;
+  padding: 0.4rem 0.85rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.driver-popover-next-btn {
+  background-color: var(--accent) !important;
+  color: var(--background) !important;
+  border: none !important;
+}
+
+.driver-popover-next-btn:hover {
+  background-color: var(--accent-strong) !important;
+}
+
+.driver-popover-next-btn:focus-visible,
+.driver-popover-prev-btn:focus-visible,
+.driver-popover-close-btn:focus-visible {
+  outline: 3px solid rgba(46, 125, 50, 0.35) !important;
+  outline-offset: 2px !important;
+}
+
+.driver-popover-prev-btn {
+  background-color: var(--surface-muted) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.driver-popover-prev-btn:hover {
+  background-color: var(--border) !important;
+}
+
+/* ── Carousel slide transition ───────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fadeIn {
+  animation: fadeIn 200ms ease-out forwards;
+}
+
+

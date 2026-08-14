@@ -1,0 +1,128 @@
+name: Enable Auto Merge
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+  checks: read
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    name: Enable auto merge after successful checks
+
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enable auto merge for validated pull requests
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pullRequests =
+              context.payload.workflow_run.pull_requests ?? [];
+
+            for (const pullRequest of pullRequests) {
+              const isFeaturePromotion =
+                pullRequest.base.ref === 'dev' &&
+                pullRequest.head.ref.startsWith('feature/');
+
+              const isStagingPromotion =
+                pullRequest.base.ref === 'staging' &&
+                pullRequest.head.ref === 'dev';
+
+              const isReleasePromotion =
+                pullRequest.base.ref === 'main' &&
+                pullRequest.head.ref === 'staging';
+
+              if (
+                (
+                  !isFeaturePromotion &&
+                  !isStagingPromotion &&
+                  !isReleasePromotion
+                ) ||
+                pullRequest.draft
+              ) {
+                continue;
+              }
+
+              // Do not grant write-side effects to pull requests from forks.
+              if (
+                pullRequest.head.repo.full_name !==
+                context.repo.owner + '/' + context.repo.repo
+              ) {
+                core.notice(
+                  `Skipping fork pull request #${pullRequest.number}.`
+                );
+                continue;
+              }
+
+              const { data: checkRuns } =
+                await github.rest.checks.listForRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: pullRequest.head.sha,
+                  per_page: 100,
+                });
+
+              const pending = checkRuns.check_runs.filter(
+                (check) => check.status !== 'completed'
+              );
+
+              const failed = checkRuns.check_runs.filter(
+                (check) =>
+                  check.status === 'completed' &&
+                  check.conclusion !== 'success'
+              );
+
+              if (pending.length || failed.length) {
+                core.notice(
+                  `Skipping #${pullRequest.number}: ` +
+                  'checks are not all successful.'
+                );
+                continue;
+              }
+
+              try {
+                await github.graphql(
+                  `mutation EnableAutoMerge(
+                    $pullRequestId: ID!,
+                    $expectedHeadOid: GitObjectID!
+                  ) {
+                    enablePullRequestAutoMerge(
+                      input: {
+                        pullRequestId: $pullRequestId
+                        expectedHeadOid: $expectedHeadOid
+                        mergeMethod: SQUASH
+                      }
+                    ) {
+                      pullRequest {
+                        number
+                      }
+                    }
+                  }`,
+                  {
+                    pullRequestId: pullRequest.node_id,
+                    expectedHeadOid: pullRequest.head.sha,
+                  }
+                );
+
+                core.notice(
+                  `Auto merge enabled for #${pullRequest.number}.`
+                );
+              } catch (error) {
+                core.setFailed(
+                  `Could not enable auto merge for ` +
+                  `#${pullRequest.number}. ` +
+                  'Enable repository auto merge and configure ' +
+                  'branch protection. ' +
+                  error.message
+                );
+              }
+            }
