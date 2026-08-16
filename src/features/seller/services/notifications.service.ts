@@ -27,7 +27,7 @@ export async function getUnreadCount(): Promise<number> {
   return 0;
 }
 
-export async function markAsRead(): Promise<void> {
+export async function markAsRead(_id?: string): Promise<void> {
   if (!hasSupabaseEnvironment()) {
     return;
   }
