@@ -1,20 +1,10 @@
 'use client';
 
-/**
- * ProductCard - marketplace variant with multi-image carousel
- *
- * Only the active image is mounted to keep DOM/GPU memory low on 2 GB phones
- * Inactive slides are skipped entirely (display:none would prevent preloading);
- * the next slide is preloaded via a hidden eager Image. The active image gets
- * LCP priority when above the fold
- *
- * Responsive is CSS-only (pointer-coarse / group-hover) - no JS device detection
- *
- * Contact UX:
- *   - WhatsApp: wa.me click-to-chat; the browser/OS opens the app or Web
- *   - Call: explanatory modal on all devices; the user must explicitly click
- *     "Llamar ahora" (tel:) — nothing is dialed automatically.
- */
+// ProductCard - marketplace variant with multi-image carousel
+// Active image is mounted to keep DOM/GPU memory low on mobile devices
+// Inactive slides are skipped and preloaded via hidden eager Image
+// Responsive behavior is CSS-only without JS device detection
+// Contact UX uses wa.me for WhatsApp and explanatory modal for phone calls
 
 import {
   useCallback,
@@ -468,9 +458,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               </button>
             )}
 
-            {/* Call - opens the explanatory modal on ALL devices.
-                The modal requires an explicit click on "Llamar ahora"
-                (<a href="tel:...">) before any call is initiated */}
+            {/* Call - opens explanatory modal on all devices */}
             {telNumber ? (
               <button
                 type="button"
@@ -536,9 +524,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               {telNumber}
             </p>
 
-            {/* Explicit user action - never auto-dials.
-                telHref is non-null here because the modal is only rendered
-                when telNumber is truthy */}
+            {/* Explicit user action without auto dialing */}
             <a
               href={telHref ?? undefined}
               onClick={() => trackContact('call')}

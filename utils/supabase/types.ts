@@ -63,7 +63,7 @@ export type Database = {
           product_id: string;
           seller_id: string;
           visitor_id: string;
-          interaction_type: 'whatsapp' | 'phone';
+          interaction_type: 'whatsapp' | 'phone' | 'view';
           created_at: string;
         };
         Insert: {
@@ -71,7 +71,7 @@ export type Database = {
           product_id: string;
           seller_id: string;
           visitor_id: string;
-          interaction_type: 'whatsapp' | 'phone';
+          interaction_type: 'whatsapp' | 'phone' | 'view';
           created_at?: string;
         };
         Update: {
@@ -79,7 +79,7 @@ export type Database = {
           product_id?: string;
           seller_id?: string;
           visitor_id?: string;
-          interaction_type?: 'whatsapp' | 'phone';
+          interaction_type?: 'whatsapp' | 'phone' | 'view';
           created_at?: string;
         };
         Relationships: [];
@@ -137,6 +137,9 @@ export type Database = {
           seller_type: 'farmer' | 'cooperative' | 'company';
           department: string | null;
           commune: string | null;
+          avatar_url: string | null;
+          phone: string | null;
+          whatsapp: string | null;
           created_at: string;
           active_product_count: number;
         }>;

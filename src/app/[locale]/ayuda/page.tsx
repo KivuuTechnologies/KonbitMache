@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLocale } from '@/i18n/config';
-import { translations } from '@/shared/i18n/translations';
-import { MarketplaceHeader } from '@/features/marketplace/components/MarketplaceHeader';
-import { SiteFooter } from '@/features/site/components/SiteFooter';
-import { SitePage } from '@/features/site/components/SitePage';
+import { SitePageLayout } from '@/features/site/components/SitePageLayout';
 import { sitePages } from '@/features/site/content';
+import { buildPageMetadata } from '@/shared/config/site';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -15,18 +13,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   if (!isLocale(locale)) return {};
   const content = sitePages.help[locale];
-  return { title: content.title, description: content.subtitle };
+  return buildPageMetadata({
+    title: content.title,
+    description: content.subtitle,
+    locale,
+    path: '/ayuda',
+  });
 }
 
 export default async function HelpPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const t = translations[locale];
-  return (
-    <div className="flex min-h-screen flex-col bg-surface text-foreground">
-      <MarketplaceHeader copy={t} locale={locale} />
-      <SitePage content={sitePages.help[locale]} />
-      <SiteFooter copy={t} locale={locale} />
-    </div>
-  );
+  return <SitePageLayout locale={locale} content={sitePages.help[locale]} />;
 }

@@ -55,7 +55,7 @@ export function SellerSidebar({ locale }: SellerSidebarProps) {
   };
 
   return (
-    <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:bg-surface-muted">
+    <aside data-sidebar="dashboard" className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:bg-surface-muted">
       <div className="flex flex-col gap-2 p-4">
         {items.map((item) => (
           <Link

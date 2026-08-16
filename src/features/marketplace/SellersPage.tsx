@@ -2,6 +2,7 @@
 
 import { useTranslations } from '@/shared/i18n/useTranslations';
 import type { TopSeller } from '@/features/marketplace/services';
+import { SellerAvatar } from './components/SellerAvatar';
 import { MapPin } from 'lucide-react';
 
 interface SellersPageProps {
@@ -12,15 +13,6 @@ export function SellersPage({ sellers }: SellersPageProps) {
   const t = useTranslations();
 
   const sellerList = sellers ?? [];
-
-  const initials = (s: TopSeller) => {
-    const src = s.business_name ?? s.full_name ?? '?';
-    return src
-      .split(' ')
-      .slice(0, 2)
-      .map((w) => w[0]?.toUpperCase() ?? '')
-      .join('');
-  };
 
   const displayName = (s: TopSeller) => s.business_name ?? s.full_name ?? '—';
 
@@ -34,7 +26,7 @@ export function SellersPage({ sellers }: SellersPageProps) {
       case 'cooperative':
         return t.filters.cooperative;
       case 'company':
-        return t.filters.company || t.filters.buyer;
+        return t.filters.company;
       default:
         return type;
     }
@@ -70,9 +62,11 @@ export function SellersPage({ sellers }: SellersPageProps) {
                 key={seller.id}
                 className="flex min-w-0 items-start gap-4 rounded-2xl bg-surface-muted p-4 sm:p-5 transition hover:shadow-md"
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted/10 font-extrabold text-muted select-none">
-                  {initials(seller)}
-                </div>
+                <SellerAvatar
+                  avatarUrl={seller.avatar_url}
+                  name={displayName(seller)}
+                  size="md"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="break-words text-base font-extrabold">{displayName(seller)}</h3>

@@ -3,15 +3,12 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getSupabaseEnvironment, hasSupabaseEnvironment } from './env';
 import type { Database } from './types';
 import { detectLocale, LOCALE_COOKIE, toSupportedLocale } from '../../src/shared/i18n/locale';
+import { logError } from '../logger/server';
 
 const REMEMBER_ME_COOKIE = 'konbit-remember';
 const REMEMBERED_SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const SESSION_MAX_AGE = 60 * 60 * 8;
 
-/**
- * Refreshes Supabase Auth cookies on requests. Do not add application logic
- * between createServerClient and getClaims: auth needs to control cookies
- */
 export async function updateSession(request: NextRequest) {
   const initialLocale =
     toSupportedLocale(request.cookies.get(LOCALE_COOKIE)?.value) ??
@@ -63,7 +60,7 @@ export async function updateSession(request: NextRequest) {
        locale = toSupportedLocale(profile?.preferred_language) ?? initialLocale;
      }
    } catch (authError) {
-     console.error('[updateSession] Auth error:', authError);
+     logError('[updateSession] Auth error:', authError);
    }
 
   response.cookies.set(LOCALE_COOKIE, locale, {

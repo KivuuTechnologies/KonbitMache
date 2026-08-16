@@ -2,9 +2,10 @@
 
 import Map, { Marker } from 'react-map-gl/maplibre';
 import type { MapRef } from 'react-map-gl/maplibre';
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
 import type { HaitiMapPoint } from './HaitiMap';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 const mapStyle = {
   version: 8 as const,
@@ -22,12 +23,71 @@ const mapStyle = {
 interface HaitiMapCanvasProps {
   accessibleLabel: string;
   points: HaitiMapPoint[];
+  locale: string;
 }
 
-const INITIAL_VIEW = { longitude: -72.65, latitude: 18.95, zoom: 6.0 };
+const MAP_UI_TRANSLATIONS = {
+  ht: { zoomIn: 'Rapproche', zoomOut: 'Eloiye', resetView: 'Koreksyon vizyèl' },
+  fr: { zoomIn: 'Zoom avant', zoomOut: 'Zoom arrière', resetView: 'Réinitialiser la vue' },
+  es: { zoomIn: 'Acercar', zoomOut: 'Alejar', resetView: 'Restablecer vista' },
+  en: { zoomIn: 'Zoom in', zoomOut: 'Zoom out', resetView: 'Reset view' },
+} as const;
 
-export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps) {
+type SupportedLocale = keyof typeof MAP_UI_TRANSLATIONS;
+
+// Center on Haiti's geographic midpoint; zoom 6.2 fits the full island
+// (including the southern peninsula) without Cuba dominating the view
+const INITIAL_VIEW = { longitude: -73.0, latitude: 18.7, zoom: 6.2 };
+
+export function HaitiMapCanvas({ accessibleLabel, points, locale }: HaitiMapCanvasProps) {
   const mapRef = useRef<MapRef>(null);
+
+  const currentLocale = (locale in MAP_UI_TRANSLATIONS ? locale : 'ht') as SupportedLocale;
+  const labels = MAP_UI_TRANSLATIONS[currentLocale];
+
+  // Automatically fit the camera view bounds to the points
+  const fitCameraToBounds = useCallback(() => {
+    const map = mapRef.current;
+    if (!map || points.length === 0) return;
+
+    let minLng = Infinity;
+    let maxLng = -Infinity;
+    let minLat = Infinity;
+    let maxLat = -Infinity;
+
+    for (const p of points) {
+      if (p.longitude < minLng) minLng = p.longitude;
+      if (p.longitude > maxLng) maxLng = p.longitude;
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+    }
+
+    if (minLng === Infinity || maxLng === -Infinity || minLat === Infinity || maxLat === -Infinity) {
+      return;
+    }
+
+    if (points.length === 1) {
+      map.flyTo({
+        center: [minLng, minLat],
+        zoom: 6.2,
+        duration: 800,
+      });
+    } else {
+      map.fitBounds([minLng, minLat, maxLng, maxLat], {
+        padding: 60,
+        maxZoom: 6.5,
+        duration: 800,
+      });
+    }
+  }, [points]);
+
+  useEffect(() => {
+    // Wait a brief tick for MapLibre map initialization if needed
+    const timer = setTimeout(() => {
+      fitCameraToBounds();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [fitCameraToBounds]);
 
   const handleZoomIn = useCallback(() => {
     mapRef.current?.zoomIn();
@@ -38,8 +98,12 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
   }, []);
 
   const handleReset = useCallback(() => {
-    mapRef.current?.flyTo({ center: [INITIAL_VIEW.longitude, INITIAL_VIEW.latitude], zoom: INITIAL_VIEW.zoom, duration: 500 });
-  }, []);
+    if (points.length > 0) {
+      fitCameraToBounds();
+    } else {
+      mapRef.current?.flyTo({ center: [INITIAL_VIEW.longitude, INITIAL_VIEW.latitude], zoom: INITIAL_VIEW.zoom, duration: 500 });
+    }
+  }, [points, fitCameraToBounds]);
 
   return (
     <div className="relative h-full w-full">
@@ -55,6 +119,7 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
         scrollZoom={false}
         dragPan
         touchZoomRotate
+        onLoad={fitCameraToBounds}
       >
         <div className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-[#303030] shadow">
           {accessibleLabel} · © OpenStreetMap
@@ -64,8 +129,8 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
             <button
               type="button"
               className="flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-white bg-accent px-1 text-[11px] font-extrabold text-white shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-accent/35"
-              aria-label={`${point.department}: ${point.count}`}
-              title={`${point.department}: ${point.count}`}
+              aria-label={`${point.commune}, ${point.department}: ${point.count}`}
+              title={`${point.commune}, ${point.department}: ${point.count}`}
             >
               {point.count}
             </button>
@@ -77,7 +142,7 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
         <button
           type="button"
           onClick={handleZoomIn}
-          aria-label="Acercar mapa"
+          aria-label={labels.zoomIn}
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#303030] shadow-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Plus className="h-4 w-4" />
@@ -85,7 +150,7 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
         <button
           type="button"
           onClick={handleZoomOut}
-          aria-label="Alejar mapa"
+          aria-label={labels.zoomOut}
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#303030] shadow-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Minus className="h-4 w-4" />
@@ -93,7 +158,7 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
         <button
           type="button"
           onClick={handleReset}
-          aria-label="Restablecer vista del mapa"
+          aria-label={labels.resetView}
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#303030] shadow-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <RotateCcw className="h-3.5 w-3.5" />
@@ -102,3 +167,5 @@ export function HaitiMapCanvas({ accessibleLabel, points }: HaitiMapCanvasProps)
     </div>
   );
 }
+
+

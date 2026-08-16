@@ -41,7 +41,7 @@ export async function AuthPageShell({ title, description, children, locale }: Au
             {t.hero.subtitle}
           </p>
           <div className="mt-10">
-            <MarketplaceStats variant="dark" hideDepartments />
+            <MarketplaceStats copy={t} variant="dark" hideDepartments />
           </div>
         </div>
 

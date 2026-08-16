@@ -45,6 +45,7 @@ interface GuideStep {
 
 export function HelpGuide({ locale }: HelpGuideProps) {
   const t = useTranslations();
+  const g = t.seller.helpGuide;
   const router = useRouter();
   const [openSection, setOpenSection] = useState<string | null>(null);
 
@@ -79,268 +80,128 @@ export function HelpGuide({ locale }: HelpGuideProps) {
       id: 'publish',
       icon: PlusCircle,
       title: t.seller.help.howToPublish,
-      description: 'Pasos para publicar tu primer producto',
-      isTour: true,
-      tourWorkflow: 'publish',
+      description: t.seller.help.howToPublishDesc,
       steps: [
-        {
-          title: 'Ir a tu panel',
-          content: 'Después de iniciar sesión serás redirigido a tu panel principal',
-          tip: 'Si es tu primera vez se mostrará un tour automático',
-        },
-        {
-          title: 'Hacer clic en Publicar producto',
-          content: 'Busca el botón verde en la parte superior de tu panel',
-        },
-        {
-          title: 'Completar la información',
-          content: 'Ingresa nombre, categoría, descripción, precio y cantidad',
-          tip: 'Una buena descripción ayuda a que te contacten más rápido',
-        },
-        {
-          title: 'Agregar fotos',
-          content: 'Sube al menos 1 foto clara, puedes subir hasta 5',
-          tip: 'Productos con fotos claras reciben el doble de contactos',
-        },
-        {
-          title: 'Publicar',
-          content: 'Revisa todo y hacer clic en Publicar',
-        },
+        { title: g.publish.step1Title, content: g.publish.step1Content, tip: g.publish.step1Tip },
+        { title: g.publish.step2Title, content: g.publish.step2Content },
+        { title: g.publish.step3Title, content: g.publish.step3Content, tip: g.publish.step3Tip },
+        { title: g.publish.step4Title, content: g.publish.step4Content, tip: g.publish.step4Tip },
+        { title: g.publish.step5Title, content: g.publish.step5Content },
       ],
     },
     {
       id: 'edit',
       icon: Edit,
       title: t.seller.help.howToEditProduct,
-      description: 'Modifica la información de tus productos',
+      description: t.seller.help.howToEditProductDesc,
       steps: [
-        {
-          title: 'Ir a Mis productos',
-          content: 'Desde el menú lateral en escritorio o la barra inferior en móvil',
-        },
-        {
-          title: 'Seleccionar el producto',
-          content: 'Busca el producto y haz clic en Editar',
-        },
-        {
-          title: 'Modificar campos',
-          content: 'Cambia la información que necesites',
-        },
-        {
-          title: 'Guardar',
-          content: 'Haz clic en Guardar para aplicar los cambios',
-        },
+        { title: g.edit.step1Title, content: g.edit.step1Content },
+        { title: g.edit.step2Title, content: g.edit.step2Content },
+        { title: g.edit.step3Title, content: g.edit.step3Content },
+        { title: g.edit.step4Title, content: g.edit.step4Content },
       ],
     },
     {
       id: 'price',
       icon: DollarSign,
       title: t.seller.help.howToChangePrice,
-      description: 'Actualiza el precio de tus productos',
+      description: t.seller.help.howToChangePriceDesc,
       steps: [
-        {
-          title: 'Acceder al producto',
-          content: 'Ve a Mis productos, busca el producto y haz clic en Editar',
-        },
-        {
-          title: 'Modificar el precio',
-          content: 'En la sección Precio ingresa el nuevo valor en HTG',
-        },
-        {
-          title: 'Guardar',
-          content: 'Haz clic en Guardar, el cambio se refleja inmediatamente',
-          tip: 'Ajusta precios según la temporada o disponibilidad',
-        },
+        { title: g.price.step1Title, content: g.price.step1Content },
+        { title: g.price.step2Title, content: g.price.step2Content },
+        { title: g.price.step3Title, content: g.price.step3Content, tip: g.price.step3Tip },
       ],
     },
     {
       id: 'pause',
       icon: Package,
-      title: 'Pausar o activar un producto',
-      description: 'Controla la visibilidad de tus productos',
-      isTour: true,
-      tourWorkflow: 'products',
+      title: t.seller.help.pauseTitle,
+      description: t.seller.help.pauseDesc,
       steps: [
-        {
-          title: 'Ir a Mis productos',
-          content: 'Accede a la lista desde el menú',
-        },
-        {
-          title: 'Cambiar estado',
-          content: 'Usa Pausar para ocultar o Activar para mostrar',
-          tip: 'Los productos pausados no aparecen pero no se eliminan',
-        },
-        {
-          title: 'Marcar como agotado',
-          content: 'Si se vendió completamente márcalo como Agotado',
-        },
+        { title: g.pause.step1Title, content: g.pause.step1Content },
+        { title: g.pause.step2Title, content: g.pause.step2Content, tip: g.pause.step2Tip },
+        { title: g.pause.step3Title, content: g.pause.step3Content },
       ],
     },
     {
       id: 'phone',
       icon: Phone,
       title: t.seller.help.howToChangePhone,
-      description: 'Actualiza tu teléfono y WhatsApp',
+      description: t.seller.help.howToChangePhoneDesc,
       steps: [
-        {
-          title: 'Ir a Perfil',
-          content: 'Desde el menú lateral o la barra inferior',
-        },
-        {
-          title: 'Editar contacto',
-          content: 'Actualiza tu teléfono y/o WhatsApp',
-          tip: 'Asegúrate que el WhatsApp tenga el código de país +509',
-        },
-        {
-          title: 'Guardar',
-          content: 'Haz clic en Guardar para actualizar',
-        },
+        { title: g.phone.step1Title, content: g.phone.step1Content },
+        { title: g.phone.step2Title, content: g.phone.step2Content, tip: g.phone.step2Tip },
+        { title: g.phone.step3Title, content: g.phone.step3Content },
       ],
     },
     {
       id: 'language',
       icon: Globe,
       title: t.seller.help.howToChangeLanguage,
-      description: 'Cambia el idioma de la plataforma',
-      isTour: true,
-      tourWorkflow: 'settings',
+      description: t.seller.help.howToChangeLanguageDesc,
       steps: [
-        {
-          title: 'Ir a Configuración',
-          content: 'Desde el menú lateral haz clic en Configuración',
-        },
-        {
-          title: 'Seleccionar idioma',
-          content: 'Elige entre Kreyòl, Français, Español o English',
-          tip: 'También puedes cambiarlo desde la página principal',
-        },
-        {
-          title: 'Aplicar',
-          content: 'El cambio se aplica inmediatamente',
-        },
+        { title: g.language.step1Title, content: g.language.step1Content },
+        { title: g.language.step2Title, content: g.language.step2Content, tip: g.language.step2Tip },
+        { title: g.language.step3Title, content: g.language.step3Content },
       ],
     },
     {
       id: 'support',
       icon: MessageCircle,
       title: t.seller.help.howToContactSupport,
-      description: 'Contacta al equipo de soporte',
+      description: t.seller.help.howToContactSupportDesc,
       steps: [
-        {
-          title: 'Problemas con tu cuenta',
-          content: 'Si tienes problemas para iniciar sesión o publicar escribe a soporte',
-        },
-        {
-          title: 'Información necesaria',
-          content: 'Incluye tu nombre de usuario, descripción del problema y capturas',
-          tip: 'Más detalle = respuesta más rápida',
-        },
-        {
-          title: 'Canales',
-          content: 'Contacta por WhatsApp o correo en la sección Contacto del sitio',
-        },
+        { title: g.support.step1Title, content: g.support.step1Content },
+        { title: g.support.step2Title, content: g.support.step2Content, tip: g.support.step2Tip },
+        { title: g.support.step3Title, content: g.support.step3Content },
       ],
     },
     {
       id: 'profile',
       icon: User,
-      title: 'Completar tu perfil',
-      description: 'Configura tu perfil para generar confianza',
-      isTour: true,
-      tourWorkflow: 'profile',
+      title: t.seller.help.profileTitle,
+      description: t.seller.help.profileDesc,
       steps: [
-        {
-          title: 'Importancia del perfil',
-          content: 'Un perfil completo genera más confianza y aumenta ventas',
-        },
-        {
-          title: 'Tipos de vendedor',
-          content: 'Puedes ser Agricultor, Cooperativa o Empresa',
-        },
-        {
-          title: 'Ubicación',
-          content: 'Selecciona tu departamento y comuna',
-          tip: 'Los compradores filtran por departamento',
-        },
-        {
-          title: 'Foto',
-          content: 'Sube una foto tuya o de tu negocio',
-        },
+        { title: g.profile.step1Title, content: g.profile.step1Content },
+        { title: g.profile.step2Title, content: g.profile.step2Content },
+        { title: g.profile.step3Title, content: g.profile.step3Content, tip: g.profile.step3Tip },
+        { title: g.profile.step4Title, content: g.profile.step4Content },
       ],
     },
     {
       id: 'dashboard',
       icon: Settings,
-      title: 'Entender tu panel',
-      description: 'Conoce las secciones del dashboard',
+      title: t.seller.help.dashboardTitle,
+      description: t.seller.help.dashboardDesc,
       steps: [
-        {
-          title: 'Resumen',
-          content: 'La página principal muestra productos activos, vistas y contactos',
-        },
-        {
-          title: 'Mis productos',
-          content: 'Ver, editar, pausar o eliminar productos',
-        },
-        {
-          title: 'Notificaciones',
-          content: 'Alertas cuando alguien ve tu producto o te contacta',
-        },
-        {
-          title: 'Perfil',
-          content: 'Gestiona tu información personal y ubicación',
-        },
-        {
-          title: 'Configuración',
-          content: 'Cambia idioma, tema y preferencias',
-        },
-        {
-          title: 'Ayuda',
-          content: 'Aquí encontrarás guías y podrás reiniciar el tour',
-          tip: 'Puedes reiniciar el tour en cualquier momento',
-        },
+        { title: g.dashboard.step1Title, content: g.dashboard.step1Content },
+        { title: g.dashboard.step2Title, content: g.dashboard.step2Content },
+        { title: g.dashboard.step3Title, content: g.dashboard.step3Content },
+        { title: g.dashboard.step4Title, content: g.dashboard.step4Content },
+        { title: g.dashboard.step5Title, content: g.dashboard.step5Content },
+        { title: g.dashboard.step6Title, content: g.dashboard.step6Content, tip: g.dashboard.step6Tip },
       ],
     },
     {
       id: 'buyers',
       icon: ShoppingBag,
-      title: 'Cómo te contactan',
-      description: 'Entiende el proceso de contacto',
+      title: t.seller.help.buyersTitle,
+      description: t.seller.help.buyersDesc,
       steps: [
-        {
-          title: 'WhatsApp',
-          content: 'Los compradores te contactan por WhatsApp con un clic',
-          tip: 'Asegúrate de tener tu WhatsApp actualizado',
-        },
-        {
-          title: 'Llamada',
-          content: 'También pueden llamarte por teléfono',
-        },
-        {
-          title: 'Responder rápido',
-          content: 'Responder rápido aumenta tus ventas',
-        },
+        { title: g.buyers.step1Title, content: g.buyers.step1Content, tip: g.buyers.step1Tip },
+        { title: g.buyers.step2Title, content: g.buyers.step2Content },
+        { title: g.buyers.step3Title, content: g.buyers.step3Content },
       ],
     },
     {
       id: 'moderation',
       icon: Shield,
-      title: 'Moderación',
-      description: 'Qué pasa si retiran un producto',
+      title: t.seller.help.moderationTitle,
+      description: t.seller.help.moderationDesc,
       steps: [
-        {
-          title: '¿Por qué se retira?',
-          content: 'Por información falsa, fotos inapropiadas o precios abusivos',
-        },
-        {
-          title: 'Notificación',
-          content: 'Verás una alerta roja con la razón',
-        },
-        {
-          title: 'Corregir',
-          content: 'Corrige el problema y vuelve a publicar',
-          tip: 'Lee bien las razones antes de volver a publicar',
-        },
+        { title: g.moderation.step1Title, content: g.moderation.step1Content },
+        { title: g.moderation.step2Title, content: g.moderation.step2Content },
+        { title: g.moderation.step3Title, content: g.moderation.step3Content, tip: g.moderation.step3Tip },
       ],
     },
   ];
@@ -390,7 +251,7 @@ export function HelpGuide({ locale }: HelpGuideProps) {
               {guide.isTour ? (
                 <span className="shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-sm font-bold text-white dark:text-background">
                   <Play className="h-4 w-4 fill-white" aria-hidden="true" />
-                  <span className="hidden sm:inline">Iniciar</span>
+                  <span className="hidden sm:inline">{t.seller.help.startButton}</span>
                 </span>
               ) : (
                 <ChevronDown

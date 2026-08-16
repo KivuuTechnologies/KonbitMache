@@ -26,7 +26,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
           <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="text-2xl font-extrabold sm:text-3xl">{t.seller.products.title}</h1>
+                <h1 data-tour="products" className="text-2xl font-extrabold sm:text-3xl">{t.seller.products.title}</h1>
               </div>
               <Link
                 href={`/${locale}/dashboard/products/new`}

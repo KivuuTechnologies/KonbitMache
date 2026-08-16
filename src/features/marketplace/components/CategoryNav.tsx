@@ -15,7 +15,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { CategoryIcon } from './CategoryIcon';
 import { useTranslations } from '@/shared/i18n/useTranslations';
-import { ALLOWED_CATEGORIES } from '@/features/seller/schemas';
+import { ALLOWED_CATEGORIES } from '@/features/marketplace/data/categories';
 import type { CategoryKey } from '@/shared/i18n/types';
 
 interface CategoryNavProps {

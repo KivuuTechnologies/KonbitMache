@@ -1,32 +1,7 @@
 'use client';
 
-/**
- * ProductImageUploader - multi-image uploader (1-5 images).
- *
- * DELETION LOGIC - three cases:
- *
- *   Case A: slot has uploadedUrl + productId exists (editing an existing product)
- *     -> call deleteProductImageAction(productId, url)
- *     -> Server Action: updates DB first, then deletes from Storage
- *     -> If server returns error, keep slot in UI and show toast (don't lie)
- *
- *   Case B: slot has uploadedUrl but NO productId (new product, not published yet)
- *     -> call deleteOrphanImageAction(url)
- *     -> Server Action: deletes from Storage only (no DB row exists yet)
- *     -> If server returns error, keep slot and show toast
- *
- *   Case C: slot has only objectUrl (still uploading, or upload just started)
- *     -> cannot happen because the remove button is hidden while uploading
- *     -> guard included for safety
- *
- * The remove button is disabled while a delete is in progress for that slot
- * to prevent double-clicks.
- *
- * objectUrl lifecycle:
- *   - Created before upload starts, kept alive until slot removal or unmount.
- *   - NOT revoked in the finally block (would cause preview flash).
- *   - Revoked when slot is removed from grid, or on component unmount
- */
+// ProductImageUploader - multi-image uploader (1-5 images)
+// Handles image compression, upload lifecycle, and storage deletion
 
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import Image from 'next/image';
@@ -43,31 +18,16 @@ import { toast } from 'sonner';
 const MAX_IMAGES = 5;
 
 interface ImageSlot {
-  /** Stable React key — generated once at creation. */
   key: string;
-  /**
-   * Object URL for preview. Created before upload, kept until slot removal
-   * or unmount. Null for slots seeded from already-uploaded URLs.
-   */
   objectUrl: string | null;
-  /** Confirmed public Supabase Storage URL. Null while uploading. */
   uploadedUrl: string | null;
-  /** True while the file is being uploaded to Storage. */
   uploading: boolean;
-  /** True while a delete Server Action is in flight for this slot. */
   deleting: boolean;
 }
 
 interface ProductImageUploaderProps {
-  /** Already-uploaded URLs from the product record (editing mode). */
   currentImageUrls?: string[];
-  /**
-   * If set, the uploader is in "edit existing product" mode.
-   * Deletions will call deleteProductImageAction(productId, url).
-   * If undefined, deletions call deleteOrphanImageAction(url) instead.
-   */
   productId?: string;
-  /** Called whenever the list of confirmed uploaded URLs changes. */
   onImagesChange: (urls: string[]) => void;
   disabled?: boolean;
 }

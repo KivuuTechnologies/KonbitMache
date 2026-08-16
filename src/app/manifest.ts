@@ -6,8 +6,8 @@ import { cookies, headers } from 'next/headers';
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const cookieLocale = (await cookies()).get(LOCALE_COOKIE)?.value;
   const acceptLanguage = (await headers()).get('accept-language');
-  const locale = toSupportedLocale(cookieLocale ?? acceptLanguage) ?? 'es';
-  const t = translations[locale] ?? translations.es;
+  const locale = toSupportedLocale(cookieLocale ?? acceptLanguage) ?? 'ht';
+  const t = translations[locale] ?? translations.ht;
   return {
     name: 'KonbitMache',
     short_name: 'KonbitMache',

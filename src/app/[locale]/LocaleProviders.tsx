@@ -12,8 +12,17 @@ const organizationSchema = ({ description }: { description: string }) => ({
   '@type': 'Organization',
   name: siteConfig.name,
   url: siteConfig.url.toString(),
+  logo: new URL('/icon.svg', siteConfig.url).toString(),
   description,
-  areaServed: { '@type': 'Country', name: 'Haiti' },
+  areaServed: {
+    '@type': 'Country',
+    name: 'Haiti',
+  },
+  knowsLanguage: ['ht', 'fr', 'es', 'en'],
+  sameAs: [
+    'https://www.facebook.com',
+    'https://www.youtube.com',
+  ],
 });
 
 interface LocaleProvidersProps {

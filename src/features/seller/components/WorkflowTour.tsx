@@ -4,9 +4,7 @@ import { useEffect, useRef } from 'react';
 import 'driver.js/dist/driver.css';
 
 interface DashboardDriver {
-  setSteps(steps: Array<{ element: HTMLElement; popover: { title: string; description: string } }>): void;
   drive(): void;
-  listen(event: string, callback: () => void): void;
   destroy(): void;
 }
 
@@ -36,7 +34,6 @@ const DASHBOARD_STEPS: TourStep[] = [
   { selector: '[data-tour="products"]', description: 'Gestiona tus productos' },
   { selector: '[data-tour="stats"]', description: 'Mide tus resultados' },
   { selector: '[data-tour="activity"]', description: 'Tu actividad reciente' },
-  { selector: '[data-tour="profile"]', description: 'Tu perfil' },
 ];
 
 export function WorkflowTour() {
@@ -91,21 +88,42 @@ export function WorkflowTour() {
         globalDriverInstance = null;
       }
 
-      const instance = driverFn() as unknown as DashboardDriver;
-      instance.setSteps(resolved.map((s) => ({
-        element: s.el,
-        popover: { title: '', description: s.desc },
-      })));
+      const saveTourCompleted = () => {
+        try { window.localStorage.setItem('konbit-dashboard-tour-completed', '1'); } catch { /* ignore */ }
+      };
+
+      const instance = driverFn({
+        steps: resolved.map((s) => ({
+          element: s.el,
+          popover: {
+            title: '',
+            description: s.desc,
+            side: 'bottom',
+            align: 'start',
+          },
+        })),
+        animate: true,
+        allowClose: true,
+        overlayOpacity: 0.5,
+        onDoneClick: () => {
+          saveTourCompleted();
+          try { instance.destroy(); } catch { /* ignore */ }
+        },
+        onCloseClick: () => {
+          saveTourCompleted();
+          try { instance.destroy(); } catch { /* ignore */ }
+        },
+        onDestroyed: () => {
+          if (globalDriverInstance === instance) {
+            globalDriverInstance = null;
+          }
+        },
+      }) as unknown as DashboardDriver;
+
       instance.drive();
       globalDriverInstance = instance;
       driverRef.current = instance;
       startingRef.current = false;
-
-      const onDone = () => {
-        try { window.localStorage.setItem('konbit-dashboard-tour-completed', '1'); } catch { /* ignore */ }
-      };
-      instance.listen('complete', onDone);
-      instance.listen('closeClick', onDone);
     }
 
     const handler = (e: Event) => {
@@ -132,3 +150,4 @@ export function WorkflowTour() {
 export function startWorkflowTour(workflow: WorkflowName) {
   window.dispatchEvent(new CustomEvent(WORKFLOW_EVENT, { detail: { workflow } }));
 }
+

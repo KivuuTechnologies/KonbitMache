@@ -24,10 +24,10 @@ export interface MarketplaceCopy {
   categories: Record<CategoryKey, string>;
   units: Record<UnitSlug, string>;
   unitsPlural: Record<UnitSlug, string>;
-  filters: { title: string; category: string; department: string; price: string; availability: string; available: string; sellerType: string; farmer: string; cooperative: string; company: string; buyer: string; clear: string };
+  filters: { title: string; category: string; department: string; price: string; availability: string; available: string; sellerType: string; farmer: string; cooperative: string; company: string; buyer?: string; clear: string };
   sections: { featured: string; recent: string; wanted: string; farmers: string; featuredSellers: string; map: string; mapDescription: string; mapOffers: string; dominantOffer: string; priorityZone: string; agriculturalZones: string; stats: string; ctaTitle: string; ctaDescription: string };
   product: { available: string; published: string; whatsapp: string; call: string; callModalTitle: string; callModalHint: string; callNow: string; callModalClose: string; quantity: string; product: string; products: string; demo: string; share: string; save: string; viewAll: string; previousImage: string; nextImage: string; description: string; };
-  stats: { farmers: string; buyers: string; cooperatives: string; companies: string; departments: string; interested: string; unavailable: string };
+  stats: { farmers: string; cooperatives: string; companies: string; departments: string; interested: string; unavailable: string };
   footer: { marketplace: string; company: string; support: string; resources: string; about: string; contact: string; help: string; privacy: string; blog: string; language: string; rights: string; comingSoon: string; newsletter: { title: string; description: string; emailPlaceholder: string; subscribe: string; success: string; error: string } };
   common: { language: string; light: string; dark: string; useLight: string; useDark: string; skipToContent: string };
   site: { description: string };
@@ -152,10 +152,87 @@ export interface SellerCopy {
     howToChangePhoneDesc: string;
     howToChangeLanguage: string; 
     howToChangeLanguageDesc: string;
-    contactSupport: string; 
+    contactSupport: string;
     // Label to trigger the dashboard tutorial
     tour: string;
     tourDesc: string;
+    // Section titles for guide cards not covered by the specific keys above
+    pauseTitle: string;
+    pauseDesc: string;
+    profileTitle: string;
+    profileDesc: string;
+    dashboardTitle: string;
+    dashboardDesc: string;
+    buyersTitle: string;
+    buyersDesc: string;
+    moderationTitle: string;
+    moderationDesc: string;
+    // Generic action label on tour-type cards
+    startButton: string;
+  };
+  helpGuide: {
+    publish: {
+      step1Title: string; step1Content: string; step1Tip: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string; step3Tip: string;
+      step4Title: string; step4Content: string; step4Tip: string;
+      step5Title: string; step5Content: string;
+    };
+    edit: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string;
+      step4Title: string; step4Content: string;
+    };
+    price: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string; step3Tip: string;
+    };
+    pause: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string; step2Tip: string;
+      step3Title: string; step3Content: string;
+    };
+    phone: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string; step2Tip: string;
+      step3Title: string; step3Content: string;
+    };
+    language: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string; step2Tip: string;
+      step3Title: string; step3Content: string;
+    };
+    support: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string; step2Tip: string;
+      step3Title: string; step3Content: string;
+    };
+    profile: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string; step3Tip: string;
+      step4Title: string; step4Content: string;
+    };
+    dashboard: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string;
+      step4Title: string; step4Content: string;
+      step5Title: string; step5Content: string;
+      step6Title: string; step6Content: string; step6Tip: string;
+    };
+    buyers: {
+      step1Title: string; step1Content: string; step1Tip: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string;
+    };
+    moderation: {
+      step1Title: string; step1Content: string;
+      step2Title: string; step2Content: string;
+      step3Title: string; step3Content: string; step3Tip: string;
+    };
   };
   // Dashboard tutorial translations and steps
   tour: {
