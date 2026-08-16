@@ -3,10 +3,20 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '../../../../utils/supabase/server';
 import { hasSupabaseEnvironment } from '../../../../utils/supabase/env';
+import { logError } from '@/utils/logger/server';
 
 export type ModerateProductResult =
   | { ok: true; message: 'success' }
-  | { ok: false; message: 'reason_required' | 'not_authenticated' | 'not_allowed' | 'unavailable' | 'not_found' | 'generic' };
+  | {
+      ok: false;
+      message:
+        | 'reason_required'
+        | 'not_authenticated'
+        | 'not_allowed'
+        | 'unavailable'
+        | 'not_found'
+        | 'generic';
+    };
 
 interface ModerateProductInput {
   productId: string;
@@ -14,12 +24,8 @@ interface ModerateProductInput {
   locale: string;
 }
 
-/**
- * Withdraws a product from the marketplace. Only admins can call this:
- * the `moderate_product` RPC enforces `is_admin` server-side
- */
 export async function moderateProductAction(
-  input: ModerateProductInput
+  input: ModerateProductInput,
 ): Promise<ModerateProductResult> {
   const productId = input.productId.trim();
   const reason = input.reason.trim();
@@ -48,7 +54,7 @@ export async function moderateProductAction(
   });
 
   if (error) {
-    console.error('[moderateProductAction] RPC error:', error.message);
+    logError('[moderateProductAction] RPC error:', error.message);
     return { ok: false, message: 'generic' };
   }
 

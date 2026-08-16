@@ -1,16 +1,12 @@
 import { z } from 'zod';
+import { ALLOWED_CATEGORIES } from '@/features/marketplace/data/categories';
 
 /**
  * Allowed product category slugs - must match the CategoryKey type and
  * what the UI passes - These are English internal values - translated labels
  * are shown in the UI but never stored in the DB
  */
-export const ALLOWED_CATEGORIES = [
-  'fruits', 'grains', 'vegetables', 'coffee', 'livestock', 'spices', 'seeds',
-  'fertilizers',
-  'tools', 'agricultural_equipment', 'machinery', 'drones', 'irrigation',
-  'agricultural_services',
-] as const;
+export { ALLOWED_CATEGORIES } from '@/features/marketplace/data/categories';
 
 export type CategorySlug = (typeof ALLOWED_CATEGORIES)[number];
 

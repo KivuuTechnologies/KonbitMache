@@ -3,9 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from '@/shared/i18n/useTranslations';
 import { createClient } from '../../../../utils/supabase/client';
+import { hasSupabaseEnvironment } from '../../../../utils/supabase/env';
+import { devError } from '@/utils/logger/client';
+import type { MarketplaceCopy } from '@/shared/i18n/types';
 import type { MarketplaceStats as MarketplaceStatsData } from '@/features/marketplace/services';
 
-interface MarketplaceStatsProps {
+export interface MarketplaceStatsProps {
+  copy?: MarketplaceCopy;
+  stats?: MarketplaceStatsData | null;
   variant?: 'light' | 'dark';
   title?: string;
   hideDepartments?: boolean;
@@ -27,64 +32,83 @@ function StatsCell({ value, label, dark }: { value: string; label: string; dark:
   );
 }
 
-/**
- * Public stats block fed by the future Supabase RPC
- * `get_public_marketplace_stats()`. It never reads `profiles` directly,
- * so it works even though `profiles` RLS stays closed to anonymous users
- *
- * - loading: skeleton cells while the RPC resolves
- * - ok: real aggregates returned by the RPC (never zeros)
- * - unavailable: RPC not created yet or errored - shows dashes + a note,
- *   never fabricated numbers
- */
-export function MarketplaceStats({ variant = 'light', title, hideDepartments = false }: MarketplaceStatsProps) {
-  const t = useTranslations();
-  const [state, setState] = useState<StatsState>({ status: 'loading' });
+export function MarketplaceStats({
+  copy: propCopy,
+  stats,
+  variant = 'light',
+  title,
+  hideDepartments = false,
+}: MarketplaceStatsProps) {
+  const contextCopy = useTranslations();
+  const t = propCopy || contextCopy;
+
+  const [state, setState] = useState<StatsState>(() => {
+    if (stats) return { status: 'ok', data: stats };
+    if (stats === null && typeof stats !== 'undefined') return { status: 'unavailable' };
+    if (!hasSupabaseEnvironment()) return { status: 'unavailable' };
+    return { status: 'loading' };
+  });
+
+  const effectiveState: StatsState =
+    stats !== undefined
+      ? stats
+        ? { status: 'ok', data: stats }
+        : { status: 'unavailable' }
+      : state;
 
   useEffect(() => {
+    if (stats !== undefined || !hasSupabaseEnvironment()) return;
+
     let active = true;
 
-    createClient()
-      .rpc('get_public_marketplace_stats')
-      .then(({ data, error }) => {
+    async function fetchStats() {
+      try {
+        const client = createClient();
+        const { data, error } = await client.rpc('get_public_marketplace_stats');
         if (!active) return;
         if (error || !data) {
-          console.error('[MarketplaceStats] RPC unavailable:', error?.message);
+          devError('[MarketplaceStats] RPC unavailable:', error?.message);
           setState({ status: 'unavailable' });
           return;
         }
-        // Guard: only trust a well-formed aggregate payload, never fake it.
         if (typeof data.farmers !== 'number' || !Array.isArray(data.departments)) {
-          console.error('[MarketplaceStats] unexpected RPC payload');
+          devError('[MarketplaceStats] unexpected RPC payload');
           setState({ status: 'unavailable' });
           return;
         }
         setState({ status: 'ok', data });
-      });
+      } catch (err) {
+        if (!active) return;
+        devError('[MarketplaceStats] fetch error:', err);
+        setState({ status: 'unavailable' });
+      }
+    }
+
+    fetchStats();
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [stats]);
 
   const dark = variant === 'dark';
 
-const cells: { value: string; label: string }[] =
-    state.status === 'ok'
+  const cells: { value: string; label: string }[] =
+    effectiveState.status === 'ok'
       ? [
-          { value: state.data.farmers.toLocaleString(), label: t.stats.farmers },
-          ...(typeof state.data.cooperatives === 'number'
-            ? [{ value: state.data.cooperatives.toLocaleString(), label: t.stats.cooperatives }]
+          { value: effectiveState.data.farmers.toLocaleString(), label: t.stats.farmers },
+          ...(typeof effectiveState.data.cooperatives === 'number'
+            ? [{ value: effectiveState.data.cooperatives.toLocaleString(), label: t.stats.cooperatives }]
             : []),
-          ...(typeof state.data.companies === 'number'
-            ? [{ value: state.data.companies.toLocaleString(), label: t.stats.companies }]
+          ...(typeof effectiveState.data.companies === 'number'
+            ? [{ value: effectiveState.data.companies.toLocaleString(), label: t.stats.companies }]
             : []),
-          ...(typeof state.data.interested === 'number'
-            ? [{ value: state.data.interested.toLocaleString(), label: t.stats.interested }]
+          ...(typeof effectiveState.data.interested === 'number'
+            ? [{ value: effectiveState.data.interested.toLocaleString(), label: t.stats.interested }]
             : []),
-          { value: state.data.departments.length.toLocaleString(), label: t.stats.departments },
+          { value: effectiveState.data.departments.length.toLocaleString(), label: t.stats.departments },
         ]
-      : state.status === 'unavailable'
+      : effectiveState.status === 'unavailable'
       ? [
           { value: DASH, label: t.stats.farmers },
           { value: DASH, label: t.stats.cooperatives },
@@ -104,7 +128,7 @@ const cells: { value: string; label: string }[] =
       ) : null}
 
       <div className={dark ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-2 gap-3 md:grid-cols-4'}>
-        {state.status === 'loading'
+        {effectiveState.status === 'loading'
           ? [1, 2, 3, 4].map((i) => (
               <div key={i} className={dark ? 'rounded-2xl bg-white/5 px-4 py-3' : 'rounded-2xl bg-surface-muted p-4 text-center sm:p-5'}>
                 <div className={dark ? 'mx-auto h-6 w-12 animate-pulse rounded bg-white/10' : 'mx-auto h-8 w-12 animate-pulse rounded bg-muted/20'} />

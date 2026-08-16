@@ -242,7 +242,7 @@ export function SellerOnboardingForm({ locale, initialProfile }: SellerOnboardin
           <OnboardingStep1
             selectedType={sellerType}
             businessName={businessName}
-            onSelectType={(type) => {
+            onSelectType={(type: SellerType) => {
               setSellerType(type);
               setErrors((prev) => ({ ...prev, seller_type: '' }));
             }}
@@ -255,11 +255,11 @@ export function SellerOnboardingForm({ locale, initialProfile }: SellerOnboardin
           <OnboardingStep2
             department={department}
             commune={commune}
-            onChangeDepartment={(dept) => {
+            onChangeDepartment={(dept: string) => {
               setDepartment(dept);
               setErrors((prev) => ({ ...prev, department: '' }));
             }}
-            onChangeCommune={(c) => {
+            onChangeCommune={(c: string) => {
               setCommune(c);
               setErrors((prev) => ({ ...prev, commune: '' }));
             }}
@@ -273,7 +273,7 @@ export function SellerOnboardingForm({ locale, initialProfile }: SellerOnboardin
             phone={phone}
             sameAsWhatsapp={sameAsWhatsapp}
             whatsapp={whatsapp}
-            onChangePhone={(p) => {
+            onChangePhone={(p: string) => {
               setPhone(p);
               if (sameAsWhatsapp) setWhatsapp(p);
               setErrors((prev) => ({ ...prev, phone: '' }));

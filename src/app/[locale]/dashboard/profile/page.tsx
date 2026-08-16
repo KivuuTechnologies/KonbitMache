@@ -58,7 +58,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
           <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
             <div className="mb-8">
-              <h1 className="text-2xl font-extrabold sm:text-3xl">{t.seller.profile.title}</h1>
+              <h1 data-tour="profile" className="text-2xl font-extrabold sm:text-3xl">{t.seller.profile.title}</h1>
             </div>
             <ProfileForm locale={locale} initialData={initialProfile} />
           </div>

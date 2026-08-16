@@ -34,7 +34,7 @@ export function NewsletterForm({ disabled }: NewsletterFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div className="mt-4 flex flex-col gap-3 sm:mt-3 sm:flex-row sm:gap-2">
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <label htmlFor="newsletter-email" className="sr-only">{t.footer.newsletter.emailPlaceholder}</label>
         <input
           id="newsletter-email"
@@ -48,21 +48,21 @@ export function NewsletterForm({ disabled }: NewsletterFormProps) {
           }}
           placeholder={t.footer.newsletter.emailPlaceholder}
           disabled={disabled}
-          className="h-16 min-w-0 flex-1 rounded-2xl border border-border bg-surface px-5 text-lg text-foreground placeholder:text-base placeholder:text-muted/80 outline-none focus:border-fey disabled:cursor-not-allowed disabled:opacity-70 sm:h-14 sm:rounded-xl sm:px-4 sm:text-base"
+          className="min-h-[48px] min-w-0 flex-1 rounded-xl border border-border bg-surface px-4 text-base text-foreground placeholder:text-sm placeholder:text-muted/80 outline-none focus:border-fey disabled:cursor-not-allowed disabled:opacity-70"
         />
         <button
           type="submit"
-          disabled={disabled}
-          className="h-16 shrink-0 rounded-2xl bg-fey px-6 text-lg font-extrabold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 dark:text-background sm:h-14 sm:rounded-xl sm:px-6 sm:text-base"
+          disabled={disabled || email.trim() === ''}
+          className="min-h-[48px] w-full shrink-0 rounded-xl bg-fey px-5 text-sm font-extrabold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 dark:text-background sm:w-auto"
         >
           {t.footer.newsletter.subscribe}
         </button>
       </div>
       {disabled ? (
-        <p className="mt-3 text-base font-semibold text-muted sm:mt-2 sm:text-sm">{t.footer.comingSoon}</p>
+        <p className="mt-2 text-xs font-semibold text-muted">{t.footer.comingSoon}</p>
       ) : null}
       {status === 'error' && !disabled ? (
-        <p className="mt-3 text-base font-semibold text-red-500 sm:mt-2 sm:text-sm">{t.footer.newsletter.error}</p>
+        <p className="mt-2 text-xs font-semibold text-red-500">{t.footer.newsletter.error}</p>
       ) : null}
     </form>
   );

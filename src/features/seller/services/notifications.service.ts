@@ -1,25 +1,46 @@
-import { mockNotifications } from './mocks';
+import { hasSupabaseEnvironment } from '../../../../utils/supabase/env';
+import { getAuthenticatedUserId } from '../../../../utils/supabase/auth-helpers';
 import type { Notification } from '../types';
 
-// TODO - Replace mock with Supabase queries against a future `notifications`
-// table - select-update where seller_id = auth-uid - or a realtime channel
-
-let notifications: Notification[] = mockNotifications.map((n) => ({ ...n }));
-
 export async function listNotifications(): Promise<Notification[]> {
-  return notifications
-    .map((n) => ({ ...n }))
-    .sort((a, b) => b.fecha.localeCompare(a.fecha));
+  if (!hasSupabaseEnvironment()) {
+    // Return mock data in development without Supabase
+    const { mockNotifications } = await import('./mocks');
+    return mockNotifications.map((n) => ({ ...n }));
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return [];
+
+  // Return empty list until notifications table is provisioned
+  return [];
 }
 
 export async function getUnreadCount(): Promise<number> {
-  return notifications.filter((n) => !n.leido).length;
+  if (!hasSupabaseEnvironment()) {
+    return 0;
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return 0;
+
+  return 0;
 }
 
-export async function markAsRead(id: string): Promise<void> {
-  notifications = notifications.map((n) => (n.id === id ? { ...n, leido: true } : n));
+export async function markAsRead(_id?: string): Promise<void> {
+  if (!hasSupabaseEnvironment()) {
+    return;
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return;
 }
 
 export async function markAllAsRead(): Promise<void> {
-  notifications = notifications.map((n) => ({ ...n, leido: true }));
+  if (!hasSupabaseEnvironment()) {
+    return;
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return;
 }

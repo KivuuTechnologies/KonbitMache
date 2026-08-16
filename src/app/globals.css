@@ -130,6 +130,13 @@ body {
   opacity: 0.58 !important;
 }
 
+/* Keep the sidebar visible above the driver.js overlay while a tour is active
+   driver.js adds the driver-active class to <body> during the tour */
+body.driver-active aside[data-sidebar="dashboard"] {
+  position: relative;
+  z-index: 100002;
+}
+
 .driver-popover-title {
   font-size: 1.125rem !important;
   font-weight: 800 !important;

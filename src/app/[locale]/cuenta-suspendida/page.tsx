@@ -7,10 +7,18 @@ import { translations } from '@/shared/i18n/translations';
 import { signOutAction } from '@/features/auth/actions/auth';
 import type { Locale } from '@/i18n/config';
 
-export const metadata: Metadata = {
-  title: 'Cuenta suspendida | KonbitMache',
-  description: 'Tu cuenta de vendedor en KonbitMache ha sido suspendida temporalmente',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = translations[locale];
+  return {
+    title: `${t.seller.suspended.title} | KonbitMache`,
+    description: t.seller.suspended.description,
+  };
+}
 
 export default async function CuentaSuspendidaPage({
   params,

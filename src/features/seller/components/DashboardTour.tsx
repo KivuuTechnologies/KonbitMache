@@ -6,6 +6,7 @@ import {
   getDashboardTourCompletedAction,
   setDashboardTourCompletedAction,
 } from '../actions/onboarding';
+import { devLog, devWarn, devError } from '@/utils/logger/client';
 import type { DriveStep, Driver } from 'driver.js';
 
 import 'driver.js/dist/driver.css';
@@ -18,28 +19,37 @@ let globalDriverInstance: Driver | null = null;
 async function markTourCompleted(): Promise<void> {
   try {
     window.localStorage.setItem(TOUR_STORAGE_KEY, '1');
-    console.log('[DashboardTour] localStorage marked completed');
-  } catch (e) {
-    console.warn('[DashboardTour] localStorage error:', e);
+    devLog('[DashboardTour] localStorage marked completed');
+  } catch {
+    devWarn('[DashboardTour] localStorage error');
   }
   try {
     const result = await setDashboardTourCompletedAction();
-    console.log('[DashboardTour] DB setDashboardTourCompletedAction result:', result);
+    devLog('[DashboardTour] DB setDashboardTourCompletedAction result');
     if (!result.ok) {
-      console.warn('[DashboardTour] DB returned ok=false — check RLS / auth on profiles table');
+      devWarn(
+        '[DashboardTour] DB returned ok=false - check RLS / auth on profiles table',
+      );
     }
-  } catch (e) {
-    console.error('[DashboardTour] DB setDashboardTourCompletedAction ERROR:', e);
+  } catch {
+    devError('[DashboardTour] DB setDashboardTourCompletedAction ERROR');
   }
 }
 
-function waitForTourElements(selectors: string[], timeoutMs = 2500): Promise<boolean> {
+function waitForTourElements(
+  selectors: string[],
+  timeoutMs = 2500,
+): Promise<boolean> {
   const start = Date.now();
   return new Promise((resolve) => {
     const check = () => {
       const anyVisible = selectors.some((sel) => {
         const candidates = Array.from(document.querySelectorAll(sel)) as HTMLElement[];
-        return candidates.some((el) => el.offsetParent !== null && getComputedStyle(el).visibility !== 'hidden');
+        return candidates.some(
+          (el) =>
+            el.offsetParent !== null &&
+            getComputedStyle(el).visibility !== 'hidden',
+        );
       });
       if (anyVisible) {
         resolve(true);
@@ -67,11 +77,16 @@ export function DashboardTour() {
 
     async function startTour(force = false) {
       if (startingRef.current) {
-        console.log('[DashboardTour] already starting, skip');
+        devLog('[DashboardTour] already starting, skip');
         return;
       }
-      if (!force && driverRef.current && globalDriverInstance === driverRef.current && driverRef.current.isActive()) {
-        console.log('[DashboardTour] already running, skip');
+      if (
+        !force &&
+        driverRef.current &&
+        globalDriverInstance === driverRef.current &&
+        driverRef.current.isActive()
+      ) {
+        devLog('[DashboardTour] already running, skip');
         return;
       }
 
@@ -80,16 +95,24 @@ export function DashboardTour() {
 
       const mappingSelectors: Array<[string, string, string]> = [
         ['[data-tour="dashboard"]', 'dashboardTitle', 'dashboardDesc'],
-        ['[data-tour="products"]',  'productsTitle',  'productsDesc'],
-        ['[data-tour="stats"]',     'statsTitle',     'statsDesc'],
-        ['[data-tour="activity"]',  'activityTitle',  'activityDesc'],
-        ['[data-tour="publish"]',   'publishTitle',   'publishDesc'],
-        ['[data-tour="profile"]',   'profileTitle',   'profileDesc'],
+        ['[data-tour="products"]', 'productsTitle', 'productsDesc'],
+        ['[data-tour="stats"]', 'statsTitle', 'statsDesc'],
+        ['[data-tour="activity"]', 'activityTitle', 'activityDesc'],
+        ['[data-tour="publish"]', 'publishTitle', 'publishDesc'],
       ];
 
+      // Only include profile step on desktop where sidebar is visible
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+      if (!isMobile) {
+        mappingSelectors.push(['[data-tour="profile"]', 'profileTitle', 'profileDesc']);
+      }
+
       if (!force) {
-        const ready = await waitForTourElements(mappingSelectors.map(([s]) => s), 2500);
-        console.log('[DashboardTour] waitForTourElements ready=', ready);
+        const ready = await waitForTourElements(
+          mappingSelectors.map(([s]) => s),
+          2500,
+        );
+        devLog('[DashboardTour] waitForTourElements ready');
         if (!ready) {
           startingRef.current = false;
           return;
@@ -106,12 +129,12 @@ export function DashboardTour() {
         const imported = await import('driver.js');
         driverFn = imported.driver as (opts?: unknown) => Driver;
         if (typeof driverFn !== 'function') {
-          console.error('[DashboardTour] driver() is not a function:', typeof driverFn);
+          devError('[DashboardTour] driver() is not a function');
           startingRef.current = false;
           return;
         }
-      } catch (error) {
-        console.error('[DashboardTour] Failed to load driver.js:', error);
+      } catch {
+        devError('[DashboardTour] Failed to load driver.js');
         startingRef.current = false;
         return;
       }
@@ -125,16 +148,25 @@ export function DashboardTour() {
       const buttons = t.seller.tour?.buttons;
       const visibleEl = (selector: string) => {
         const candidates = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
-        return candidates.find((el) => el.offsetParent !== null && getComputedStyle(el).visibility !== 'hidden') || null;
+        return (
+          candidates.find(
+            (el) =>
+              el.offsetParent !== null &&
+              getComputedStyle(el).visibility !== 'hidden',
+          ) || null
+        );
       };
 
       const steps: DriveStep[] = [];
       for (const [selector, titleKey, descKey] of mappingSelectors) {
         const el = visibleEl(selector);
         if (!el) continue;
-        // TypeScript indexing: treat ts as a record of strings
-        const title = ts ? (ts as unknown as Record<string, string>)[titleKey] || '' : '';
-        const description = ts ? (ts as unknown as Record<string, string>)[descKey] || selector : selector;
+        const title = ts
+          ? (ts as unknown as Record<string, string>)[titleKey] || ''
+          : '';
+        const description = ts
+          ? (ts as unknown as Record<string, string>)[descKey] || selector
+          : selector;
         steps.push({
           element: el,
           popover: {
@@ -149,7 +181,7 @@ export function DashboardTour() {
         });
       }
 
-      console.log('[DashboardTour] final steps=', steps.length, mappingSelectors.map(([selector]) => ({ selector, found: !!document.querySelector(selector), visible: !!visibleEl(selector) })));
+      devLog('[DashboardTour] final steps');
 
       if (steps.length === 0) {
         startingRef.current = false;
@@ -181,15 +213,17 @@ export function DashboardTour() {
         prevBtnText: buttons?.prev || undefined,
         doneBtnText: buttons?.done || undefined,
         onDoneClick: () => {
-          console.log('[DashboardTour] onDoneClick — marking completed');
+          devLog('[DashboardTour] onDoneClick - marking completed');
           markOnce();
+          try { instance.destroy(); } catch { /* ignore */ }
         },
         onCloseClick: () => {
-          console.log('[DashboardTour] onCloseClick — marking completed');
+          devLog('[DashboardTour] onCloseClick - marking completed');
           markOnce();
+          try { instance.destroy(); } catch { /* ignore */ }
         },
         onDestroyed: () => {
-          console.log('[DashboardTour] onDestroyed — ensuring completed marked');
+          devLog('[DashboardTour] onDestroyed - ensuring completed marked');
           markOnce();
           if (globalDriverInstance === instance) {
             globalDriverInstance = null;
@@ -203,11 +237,13 @@ export function DashboardTour() {
       startingRef.current = false;
     }
 
-    const hasQueryParam = typeof window !== 'undefined' && window.location.search.includes('startTour=true');
+    const hasQueryParam =
+      typeof window !== 'undefined' &&
+      window.location.search.includes('startTour=true');
 
     async function resolveAutoStart() {
       if (hasQueryParam) {
-        console.log('[DashboardTour] startTour=true in URL → force start');
+        devLog('[DashboardTour] startTour=true in URL - force start');
         void startTour(true);
         return;
       }
@@ -216,9 +252,9 @@ export function DashboardTour() {
       try {
         const result = await getDashboardTourCompletedAction();
         dbCompleted = result.ok && result.completed;
-        console.log('[DashboardTour] getDashboardTourCompletedAction DB result:', result, 'dbCompleted=', dbCompleted);
-      } catch (e) {
-        console.error('[DashboardTour] getDashboardTourCompletedAction DB ERROR:', e);
+        devLog('[DashboardTour] getDashboardTourCompletedAction DB result');
+      } catch {
+        devError('[DashboardTour] getDashboardTourCompletedAction DB ERROR');
       }
 
       let lsCompleted = false;
@@ -228,7 +264,7 @@ export function DashboardTour() {
         // ignore
       }
 
-      console.log('[DashboardTour] dbCompleted=', dbCompleted, 'lsCompleted=', lsCompleted, '→ autoStart=', !dbCompleted && !lsCompleted);
+      devLog('[DashboardTour] completed check');
 
       if (!dbCompleted && !lsCompleted) {
         void startTour(false);
@@ -245,7 +281,7 @@ export function DashboardTour() {
     void resolveAutoStart();
 
     const handler = () => {
-      console.log('[DashboardTour] event', TOUR_EVENT, '→ force start');
+      devLog('[DashboardTour] event tour force start');
       void startTour(true);
     };
     window.addEventListener(TOUR_EVENT, handler);

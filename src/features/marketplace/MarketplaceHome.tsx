@@ -9,6 +9,7 @@ import { MarketplaceSearch, type SearchFilters } from './components/MarketplaceS
 import { ProductGrid } from './components/ProductGrid';
 import { MarketplaceStats } from './components/MarketplaceStats';
 import { HaitiMap } from './components/HaitiMap';
+import { SellerAvatar } from './components/SellerAvatar';
 import { SiteFooter } from '@/features/site/components/SiteFooter';
 import { useTranslations } from '@/shared/i18n/useTranslations';
 import type { TopSeller, PublicProduct } from '@/features/marketplace/services';
@@ -62,9 +63,9 @@ export function MarketplaceHome({
       <main className="mx-auto max-w-7xl px-4 pb-9 sm:px-6 sm:pb-14">
         <FeaturedSellersSection copy={t} sellers={topSellers} locale={locale} />
         <div className="mt-14 sm:mt-16">
-          <HaitiMap copy={t} products={products} />
+          <HaitiMap copy={t} products={products} locale={locale} />
         </div>
-        <MarketplaceStats title={t.sections.stats} />
+        <MarketplaceStats copy={t} title={t.sections.stats} />
         <CtaSection copy={t} locale={locale} />
       </main>
 
@@ -82,15 +83,6 @@ function FeaturedSellersSection({
   sellers: TopSeller[];
   locale: string;
 }) {
-  const initials = (s: TopSeller) => {
-    const src = s.business_name ?? s.full_name ?? '?';
-    return src
-      .split(' ')
-      .slice(0, 2)
-      .map((w) => w[0]?.toUpperCase() ?? '')
-      .join('');
-  };
-
   const displayName = (s: TopSeller) => s.business_name ?? s.full_name ?? '—';
 
   const displayPlace = (s: TopSeller) =>
@@ -103,7 +95,7 @@ function FeaturedSellersSection({
       case 'cooperative':
         return copy.filters.cooperative;
       case 'company':
-        return copy.filters.company || copy.filters.buyer;
+        return copy.filters.company;
       default:
         return type;
     }
@@ -140,9 +132,11 @@ function FeaturedSellersSection({
               key={seller.id}
               className="flex min-w-0 items-center gap-4 rounded-2xl bg-surface-muted p-4 sm:p-5"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted/10 font-extrabold text-muted select-none">
-                {initials(seller)}
-              </div>
+              <SellerAvatar
+                avatarUrl={seller.avatar_url}
+                name={displayName(seller)}
+                size="md"
+              />
               <div className="min-w-0">
                 <h3 className="break-words text-base font-extrabold">{displayName(seller)}</h3>
                 <p className="mt-1 text-xs text-muted">{sellerTypeLabel(seller.seller_type)}</p>
@@ -167,26 +161,26 @@ function FeaturedSellersSection({
 
 function CtaSection({ copy, locale }: { copy: ReturnType<typeof useTranslations>; locale: string }) {
   return (
-    <section className="mt-14 overflow-hidden rounded-3xl bg-[#0f1a0d] px-6 py-8 text-white sm:mt-16 sm:px-10 sm:py-12">
-      <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-xl">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
-            <Sprout className="h-6 w-6" aria-hidden="true" />
+    <section className="mt-14 overflow-hidden rounded-2xl bg-[#0f1a0d] px-6 py-10 text-white sm:mt-16 sm:px-10 sm:py-12">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-row items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
+            <Sprout className="h-5 w-5" aria-hidden="true" />
           </div>
-          <h2 className="mt-5 text-[clamp(1.75rem,7vw,2.25rem)] font-extrabold tracking-tight">
-            {copy.sections.ctaTitle}
-          </h2>
-          <p className="mt-3 text-base leading-7 text-white/75">{copy.sections.ctaDescription}</p>
+          <div className="min-w-0">
+            <h2 className="text-lg font-extrabold leading-tight tracking-tight sm:text-xl">
+              {copy.sections.ctaTitle}
+            </h2>
+            <p className="mt-0.5 text-sm text-white/65 leading-snug">{copy.sections.ctaDescription}</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Link
-            href={`/${locale}/registro`}
-            className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-white dark:text-background transition hover:bg-accent-strong"
-          >
-            <Leaf className="h-5 w-5" aria-hidden="true" />
-            {copy.nav.publish}
-          </Link>
-        </div>
+        <Link
+          href={`/${locale}/registro`}
+          className="flex w-full shrink-0 min-h-10 items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-extrabold text-white dark:text-background transition hover:bg-accent-strong sm:w-auto"
+        >
+          <Leaf className="h-4 w-4" aria-hidden="true" />
+          {copy.nav.publish}
+        </Link>
       </div>
     </section>
   );
