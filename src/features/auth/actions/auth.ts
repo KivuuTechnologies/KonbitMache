@@ -37,6 +37,8 @@ export async function signInAction(input: LocalizedInput<LoginInput>): Promise<A
   if (!parsed.success) return invalidInput(input.locale, parsed.error.issues[0]?.message);
   if (!hasSupabaseEnvironment()) return unavailable(input.locale);
 
+  // Supabase Auth handles built-in rate limiting per IP and email
+  
   const sessionCookieMaxAge = parsed.data.remember
     ? REMEMBERED_SESSION_MAX_AGE
     : SESSION_MAX_AGE;

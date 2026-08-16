@@ -1,4 +1,3 @@
-import { hasSupabaseEnvironment } from './env';
 import { createClient as createServerClient } from './server';
 
 type ServerClient = Awaited<ReturnType<typeof createServerClient>>;

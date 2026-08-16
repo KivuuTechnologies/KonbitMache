@@ -1,10 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 
-/**
- * Shared loading skeletons + error panel for the dashboard sections.
- * Skeletons are the Suspense fallbacks - they only render while the section
- * is fetching, so "loading" is never confused with a real 0 or an error
- */
+// Shared loading skeletons and error panel for dashboard sections
+// Skeletons are Suspense fallbacks rendered while sections fetch
 
 export function DashboardError({ message }: { message: string }) {
   return (

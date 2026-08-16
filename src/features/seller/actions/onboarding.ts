@@ -3,6 +3,7 @@
 import { createClient } from '../../../../utils/supabase/server';
 import { hasSupabaseEnvironment } from '../../../../utils/supabase/env';
 import { getAuthenticatedUserId } from '../../../../utils/supabase/auth-helpers';
+import { logError } from '@/utils/logger/server';
 import type { SellerType, ProfileStatus } from '../types';
 import {
   onboardingStep1Schema,
@@ -37,17 +38,26 @@ export async function saveOnboardingStepAction(data: {
     return { ok: false, message: '' };
   }
 
-  // Validate only the fields present in the current step payload
   if (data.seller_type !== undefined) {
-    const v1 = onboardingStep1Schema.safeParse({ seller_type: data.seller_type, business_name: data.business_name });
+    const v1 = onboardingStep1Schema.safeParse({
+      seller_type: data.seller_type,
+      business_name: data.business_name,
+    });
     if (!v1.success) return { ok: false, message: '' };
   }
   if (data.department !== undefined || data.commune !== undefined) {
-    const v2 = onboardingStep2Schema.safeParse({ department: data.department, commune: data.commune });
+    const v2 = onboardingStep2Schema.safeParse({
+      department: data.department,
+      commune: data.commune,
+    });
     if (!v2.success) return { ok: false, message: '' };
   }
   if (data.phone !== undefined) {
-    const v3 = onboardingStep3Schema.safeParse({ phone: data.phone, sameAsWhatsapp: false, whatsapp: data.whatsapp });
+    const v3 = onboardingStep3Schema.safeParse({
+      phone: data.phone,
+      sameAsWhatsapp: false,
+      whatsapp: data.whatsapp,
+    });
     if (!v3.success) return { ok: false, message: '' };
   }
 
@@ -99,13 +109,15 @@ export async function completeOnboardingAction(data: {
   return { ok: true };
 }
 
-/**
- * Uploads an avatar to avatars/{user_id}/avatar-webp
- * The path is scoped by the authenticated user id to match the RLS policy
- */
-export async function uploadAvatarAction(formData: FormData): Promise<OnboardingActionResult> {
+export async function uploadAvatarAction(
+  formData: FormData,
+): Promise<OnboardingActionResult> {
   if (!hasSupabaseEnvironment()) {
-    return { ok: true, avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' };
+    return {
+      ok: true,
+      avatar_url:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    };
   }
 
   const supabase = await createClient();
@@ -126,7 +138,6 @@ export async function uploadAvatarAction(formData: FormData): Promise<Onboarding
     return { ok: false, message: '' };
   }
 
-  // 2MB max after client-side compression
   if (file.size > 2 * 1024 * 1024) {
     return { ok: false, message: '' };
   }
@@ -159,12 +170,10 @@ export async function uploadAvatarAction(formData: FormData): Promise<Onboarding
   return { ok: true, avatar_url: publicUrl };
 }
 
-/**
- * Checks if the seller has completed the dashboard tour
- * Looks up the seller profile by authenticated user id
- * Returns true when has_completed_dashboard_tour is true in DB
- */
-export async function getDashboardTourCompletedAction(): Promise<{ ok: boolean; completed: boolean }> {
+export async function getDashboardTourCompletedAction(): Promise<{
+  ok: boolean;
+  completed: boolean;
+}> {
   if (!hasSupabaseEnvironment()) {
     return { ok: true, completed: false };
   }
@@ -188,11 +197,9 @@ export async function getDashboardTourCompletedAction(): Promise<{ ok: boolean; 
   return { ok: true, completed: Boolean(data.has_completed_dashboard_tour) };
 }
 
-/**
- * Marks the dashboard tour as completed for the authenticated seller
- * Sets has_completed_dashboard_tour = true in profiles row
- */
-export async function setDashboardTourCompletedAction(): Promise<{ ok: boolean }> {
+export async function setDashboardTourCompletedAction(): Promise<{
+  ok: boolean;
+}> {
   if (!hasSupabaseEnvironment()) {
     return { ok: true };
   }
@@ -212,7 +219,7 @@ export async function setDashboardTourCompletedAction(): Promise<{ ok: boolean }
     .eq('id', userId);
 
   if (error) {
-    console.error('[setDashboardTourCompletedAction] Update error:', error.message);
+    logError('[setDashboardTourCompletedAction] Update error:', error.message);
     return { ok: false };
   }
 

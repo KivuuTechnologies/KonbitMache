@@ -5,19 +5,19 @@ import { MapPin } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { MarketplaceCopy, CategoryKey } from '@/shared/i18n/types';
 import type { PublicProduct } from '@/features/marketplace/services';
-import { departmentCoordinates } from '../data/haitiDepartments';
+import { resolveCommuneCoordinates, normalizeName } from '@/data/haiti-communes-coordinates';
 
 const HaitiMapCanvas = dynamic(() => import('./HaitiMapCanvas').then((module) => module.HaitiMapCanvas), {
   ssr: false,
-  loading: () => <div className="h-80 animate-pulse rounded-b-3xl bg-[#2d4736]" aria-label="Cargando mapa" />,
 });
 
 export interface HaitiMapPoint {
   id: string;
   department: string;
+  commune: string;
   longitude: number;
   latitude: number;
-  /** Number of active offers in the department */
+  /** Number of active offers in the commune */
   count: number;
   /** Dominant category among those offers (most frequent) */
   category: CategoryKey | null;
@@ -26,37 +26,42 @@ export interface HaitiMapPoint {
 interface HaitiMapProps {
   copy: MarketplaceCopy;
   products: PublicProduct[];
+  locale: string;
 }
 
 /**
- * Collapses all active offers into one point per department. Offers with no
- * seller department are skipped. Point count = number of offers there
+ * Collapses all active offers into one point per commune
+ * Offers with no seller department or commune or unresolvable ones are skipped
  */
 function buildPoints(products: PublicProduct[]): HaitiMapPoint[] {
-  const buckets = new Map<string, { count: number; categories: Map<string, number> }>();
+  const buckets = new Map<string, { count: number; department: string; commune: string; categories: Map<string, number> }>();
 
   for (const product of products) {
     const department = product.seller_location?.department;
-    if (!department) continue;
-    const coords = departmentCoordinates[department];
+    const commune = product.seller_location?.commune;
+    if (!department || !commune) continue;
+
+    const coords = resolveCommuneCoordinates(department, commune);
     if (!coords) continue;
 
-    let bucket = buckets.get(department);
+    const key = `${normalizeName(department)}_${normalizeName(commune)}`;
+    let bucket = buckets.get(key);
     if (!bucket) {
-      bucket = { count: 0, categories: new Map() };
-      buckets.set(department, bucket);
+      bucket = { count: 0, department, commune, categories: new Map() };
+      buckets.set(key, bucket);
     }
     bucket.count += 1;
     bucket.categories.set(product.category, (bucket.categories.get(product.category) ?? 0) + 1);
   }
 
   return [...buckets.entries()]
-    .map(([department, bucket]) => {
-      const coords = departmentCoordinates[department];
+    .map(([key, bucket]) => {
+      const coords = resolveCommuneCoordinates(bucket.department, bucket.commune)!;
       const top = [...bucket.categories.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
       return {
-        id: department,
-        department,
+        id: key,
+        department: bucket.department,
+        commune: bucket.commune,
         longitude: coords.longitude,
         latitude: coords.latitude,
         count: bucket.count,
@@ -66,7 +71,7 @@ function buildPoints(products: PublicProduct[]): HaitiMapPoint[] {
     .sort((a, b) => b.count - a.count);
 }
 
-export function HaitiMap({ copy, products }: HaitiMapProps) {
+export function HaitiMap({ copy, products, locale }: HaitiMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [shouldLoadMap, setShouldLoadMap] = useState(false);
 
@@ -88,7 +93,7 @@ export function HaitiMap({ copy, products }: HaitiMapProps) {
   const points = useMemo(() => buildPoints(products), [products]);
   const totalOffers = points.reduce((sum, p) => sum + p.count, 0);
 
-  // Info panel always shows the department with the most offers
+  // Info panel always shows the commune with the most offers
   const mainPoint = points[0] ?? null;
   const mainCategory = mainPoint?.category ? (copy.categories[mainPoint.category] ?? mainPoint.category) : null;
 
@@ -101,7 +106,7 @@ export function HaitiMap({ copy, products }: HaitiMapProps) {
           <p className="mt-4 max-w-md text-base leading-7 text-white/80">{copy.sections.mapDescription}</p>
           {mainPoint ? (
             <div className="mt-6 rounded-2xl border border-fey/50 bg-fey/15 p-4">
-              <p className="text-sm font-extrabold text-[#b5de82]">1 · {mainPoint.department}</p>
+              <p className="text-sm font-extrabold text-[#b5de82]">1 · {mainPoint.commune} ({mainPoint.department})</p>
               {mainCategory ? <p className="mt-1 text-base font-bold">{copy.sections.dominantOffer}: {mainCategory}</p> : null}
               <p className="mt-1 text-sm text-white/75">
                 {mainPoint.count} {copy.sections.mapOffers}
@@ -113,14 +118,18 @@ export function HaitiMap({ copy, products }: HaitiMapProps) {
             {totalOffers} {copy.sections.mapOffers}
           </div>
         </div>
-        <div ref={mapContainerRef} className="h-80 w-full lg:h-full lg:min-h-0">
-          {shouldLoadMap ? (
-            <HaitiMapCanvas accessibleLabel={copy.sections.agriculturalZones} points={points} />
-          ) : (
-            <div className="h-full w-full bg-[#2d4736]" aria-label={copy.sections.agriculturalZones} />
-          )}
+        <div ref={mapContainerRef} className="relative h-80 w-full lg:h-auto">
+          <div className="absolute inset-0">
+            {shouldLoadMap ? (
+              <HaitiMapCanvas accessibleLabel={copy.sections.agriculturalZones} points={points} locale={locale} />
+            ) : (
+              <div className="h-full w-full animate-pulse bg-[#2d4736] rounded-b-3xl lg:rounded-r-3xl lg:rounded-bl-none" aria-label={copy.sections.agriculturalZones} />
+            )}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
+

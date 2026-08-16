@@ -3,13 +3,22 @@ import type { Metadata } from 'next';
 import { createClient } from '../../../../utils/supabase/server';
 import { hasSupabaseEnvironment } from '../../../../utils/supabase/env';
 import { SellerOnboardingForm } from '@/features/seller/components/SellerOnboardingForm';
+import { translations } from '@/shared/i18n/translations';
 import type { Locale } from '@/i18n/config';
 import type { SellerProfile } from '@/features/seller/types';
 
-export const metadata: Metadata = {
-  title: 'Perfil de vendedor | KonbitMache',
-  description: 'Completa tu información para comenzar a publicar tus productos agrícolas en KonbitMache',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = translations[locale];
+  return {
+    title: `${t.seller.onboarding.step1.title} | KonbitMache`,
+    description: t.seller.help.profileDesc,
+  };
+}
 
 export default async function OnboardingPage({
   params,

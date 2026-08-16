@@ -53,7 +53,7 @@ export function SiteFooter({ copy, locale }: SiteFooterProps) {
               <span className="text-xl font-extrabold">KonbitMache</span>
             </Link>
             <p className="mt-2 text-sm leading-5 text-muted">{copy.site.description}</p>
-            <div className="mt-4 rounded-2xl border border-border/50 bg-surface-muted p-4 sm:p-5 opacity-70 lg:mt-6 lg:p-6">
+            <div className="mt-4 rounded-2xl border border-border/50 bg-surface-muted px-4 py-5 sm:p-5 lg:mt-6 lg:p-6">
               <h2 className="text-lg font-extrabold sm:text-xl lg:text-2xl">{copy.footer.newsletter.title}</h2>
               <p className="mt-2 text-sm leading-6 text-muted sm:text-base sm:leading-7 lg:text-base">{copy.footer.newsletter.description}</p>
               <NewsletterForm disabled />

@@ -3,6 +3,7 @@
 import { BookOpen, DollarSign, Edit, MessageCircle, Phone, Globe, Play } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from '@/shared/i18n/useTranslations';
+import { devLog } from '@/utils/logger/client';
 
 interface HelpCardsProps {
   locale: string;
@@ -15,14 +16,14 @@ export function HelpCards({ locale }: HelpCardsProps) {
   const dashboardPath = `/${locale}/dashboard`;
 
   const handleStartTour = () => {
-    console.log('[HelpCards] handleStartTour', { pathname, dashboardPath });
+    devLog('[HelpCards] handleStartTour');
     if (pathname === dashboardPath) {
-      console.log('[HelpCards] dispatching start-dashboard-tour');
+      devLog('[HelpCards] dispatching start-dashboard-tour');
       window.dispatchEvent(new Event('start-dashboard-tour'));
       return;
     }
 
-    console.log('[HelpCards] redirecting to', `${dashboardPath}?startTour=true`);
+    devLog('[HelpCards] redirecting to dashboard?startTour=true');
     router.push(`${dashboardPath}?startTour=true`);
   };
 
