@@ -11,7 +11,7 @@ import type { UserLocale } from '../../../utils/supabase/types';
 /* Profile*/
 
 
-export const SELLER_TYPES = ['farmer', 'cooperative', 'company'] as const;
+export const SELLER_TYPES = ['farmer'] as const;
 export type SellerType = (typeof SELLER_TYPES)[number];
 
 export const PROFILE_STATUSES = ['incomplete', 'active', 'suspended'] as const;

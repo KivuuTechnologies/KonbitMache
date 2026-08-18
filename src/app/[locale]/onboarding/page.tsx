@@ -66,7 +66,7 @@ export default async function OnboardingPage({
 
   const initialProfile: Partial<SellerProfile> = profile
     ? {
-        seller_type: profile.seller_type || undefined,
+        seller_type: 'farmer',
         business_name: profile.business_name || undefined,
         department: profile.department || undefined,
         commune: profile.commune || undefined,

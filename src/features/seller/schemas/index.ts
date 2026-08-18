@@ -39,7 +39,7 @@ export type ProductFormData = z.infer<typeof productSchema>;
  */
 export const profileSchema = z.object({
   full_name: z.string().trim().min(1, 'Full name is required').max(100, 'Name is too long'),
-  seller_type: z.enum(['farmer', 'cooperative', 'company']),
+  seller_type: z.literal('farmer'),
   business_name: z.string().trim().max(100, 'Business name is too long').optional().or(z.literal('')),
   department: z.string().min(1, 'Department is required'),
   commune: z.string().trim().max(50, 'Commune is too long').optional().or(z.literal('')),

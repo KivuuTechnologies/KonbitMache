@@ -19,16 +19,16 @@ export interface AuthCopy {
 }
 
 export interface MarketplaceCopy {
-  nav: { marketplace: string; categories: string; cooperatives: string; farmers: string; signIn: string; register: string; publish: string; comingSoon: string; openMenu: string };
+  nav: { marketplace: string; categories: string; farmers: string; signIn: string; register: string; publish: string; comingSoon: string; openMenu: string };
   hero: { eyebrow: string; title: string; subtitle: string; searchPlaceholder: string; department: string; category: string; allCategories: string; search: string };
   categories: Record<CategoryKey, string>;
   units: Record<UnitSlug, string>;
   unitsPlural: Record<UnitSlug, string>;
-  filters: { title: string; category: string; department: string; price: string; availability: string; available: string; sellerType: string; farmer: string; cooperative: string; company: string; buyer?: string; clear: string };
+  filters: { title: string; category: string; department: string; price: string; availability: string; available: string; sellerType: string; farmer: string; buyer?: string; clear: string };
   sections: { featured: string; recent: string; wanted: string; farmers: string; featuredSellers: string; map: string; mapDescription: string; mapOffers: string; dominantOffer: string; priorityZone: string; agriculturalZones: string; stats: string; ctaTitle: string; ctaDescription: string };
   product: { available: string; published: string; whatsapp: string; call: string; callModalTitle: string; callModalHint: string; callNow: string; callModalClose: string; quantity: string; product: string; products: string; demo: string; share: string; save: string; viewAll: string; previousImage: string; nextImage: string; description: string; };
-  stats: { farmers: string; cooperatives: string; companies: string; departments: string; interested: string; unavailable: string };
-  footer: { marketplace: string; company: string; support: string; resources: string; about: string; contact: string; help: string; privacy: string; blog: string; language: string; rights: string; comingSoon: string; newsletter: { title: string; description: string; emailPlaceholder: string; subscribe: string; success: string; error: string } };
+  stats: { farmers: string; departments: string; interested: string; unavailable: string };
+  footer: { marketplace: string; support: string; resources: string; about: string; contact: string; help: string; privacy: string; blog: string; language: string; rights: string; comingSoon: string; newsletter: { title: string; description: string; emailPlaceholder: string; subscribe: string; success: string; error: string } };
   common: { language: string; light: string; dark: string; useLight: string; useDark: string; skipToContent: string };
   site: { description: string };
   auth: AuthCopy;
@@ -100,11 +100,9 @@ export interface SellerCopy {
   profile: { 
     title: string; 
     account: string; 
-    business: string; 
     contact: string; 
     fullName: string; 
     sellerType: string; 
-    businessName: string; 
     department: string; 
     commune: string; 
     phone: string; 
@@ -114,7 +112,7 @@ export interface SellerCopy {
     cancel: string; 
     success: string; 
     error: string; 
-    type: { farmer: string; cooperative: string; company: string }; 
+    type: { farmer: string }; 
     status: { incomplete: string; active: string; suspended: string };
   };
   notifications: { 
@@ -283,8 +281,6 @@ export interface SellerCopy {
       title: string;
       subtitle: string;
       farmer: { title: string; desc: string };
-      cooperative: { title: string; desc: string };
-      company: { title: string; desc: string };
       businessNameLabel: string;
       businessNameHelp: string;
       businessNamePlaceholder: string;

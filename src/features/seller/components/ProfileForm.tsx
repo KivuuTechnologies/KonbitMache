@@ -156,7 +156,7 @@ export function ProfileForm({ locale, initialData }: ProfileFormProps) {
       </div>
 
       <div className="rounded-2xl border bg-surface p-6">
-        <h2 className="mb-4 text-lg font-extrabold">{t.seller.profile.business}</h2>
+        <h2 className="mb-4 text-lg font-extrabold">{t.seller.profile.sellerType}</h2>
         <div className="space-y-4">
           <div>
             <label className="mb-2 block text-base font-semibold">{t.seller.profile.sellerType}</label>
@@ -166,15 +166,14 @@ export function ProfileForm({ locale, initialData }: ProfileFormProps) {
               disabled={isSubmitting}
             >
               <option value="farmer">{t.seller.profile.type.farmer}</option>
-              <option value="cooperative">{t.seller.profile.type.cooperative}</option>
-              <option value="company">{t.seller.profile.type.company}</option>
             </select>
           </div>
 
           <div>
-            <label className="mb-2 block text-base font-semibold">{t.seller.profile.businessName}</label>
+            <label className="mb-2 block text-base font-semibold">{t.seller.onboarding.step1.businessNameLabel}</label>
             <input
               type="text"
+              placeholder={t.seller.onboarding.step1.businessNamePlaceholder}
               {...form.register('business_name')}
               className="w-full min-h-12 rounded-xl border bg-surface px-4 text-base outline-none focus:ring-2 focus:ring-te"
               disabled={isSubmitting}
