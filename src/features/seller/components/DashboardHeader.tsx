@@ -14,13 +14,10 @@ interface DashboardHeaderProps {
  * Maps DB seller_type values to localized display strings using existing i18n
  */
 function getSellerTypeLabel(
-  sellerType: SellerProfile['seller_type'],
+  _sellerType: SellerProfile['seller_type'],
   t: MarketplaceCopy
 ): string {
-  if (sellerType === 'farmer') return t.seller.profile.type.farmer;
-  if (sellerType === 'cooperative') return t.seller.profile.type.cooperative;
-  if (sellerType === 'company') return t.seller.profile.type.company;
-  return '';
+  return t.seller.profile.type.farmer;
 }
 
 export function DashboardHeader({ profile, t }: DashboardHeaderProps) {

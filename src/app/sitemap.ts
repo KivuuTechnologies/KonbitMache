@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '', priority: 1.0 as const, changeFrequency: 'daily' as const },
     { path: '/categorias', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/vendedores', priority: 0.9, changeFrequency: 'weekly' as const },
-    { path: '/cooperativas', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/acerca-de', priority: 0.6, changeFrequency: 'monthly' as const },
     { path: '/blog', priority: 0.6, changeFrequency: 'weekly' as const },
     { path: '/contacto', priority: 0.5, changeFrequency: 'monthly' as const },

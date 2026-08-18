@@ -20,13 +20,13 @@ export interface BlogPost {
   readTime: string;
 }
 
-export type SitePageKey = 'categorias' | 'cooperativas' | 'about' | 'contact' | 'help' | 'privacy';
+export type SitePageKey = 'categorias' | 'about' | 'contact' | 'help' | 'privacy';
 
 export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
   categorias: {
     es: {
       title: 'Categorías de productos',
-      subtitle: 'Explora todas las categorías disponibles en KonbitMache y encuentra productos de agricultores y cooperativas de toda Haití',
+      subtitle: 'Explora todas las categorías disponibles en KonbitMache y encuentra productos de agricultores de toda Haití',
       sections: [
         {
           title: 'Alimentos y cosechas',
@@ -47,7 +47,7 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
     },
     ht: {
       title: 'Kategori pwodui yo',
-      subtitle: 'Eksplore tout kategori ki disponib sou KonbitMache epi jwenn pwodui peyizan ak koperativ nan tout Ayiti',
+      subtitle: 'Eksplore tout kategori ki disponib sou KonbitMache epi jwenn pwodui peyizan nan tout Ayiti',
       sections: [
         {
           title: 'Manje ak rekòt',
@@ -68,7 +68,7 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
     },
     fr: {
       title: 'Catégories de produits',
-      subtitle: 'Explorez toutes les catégories disponibles sur KonbitMache et trouvez des produits de producteurs et coopératives de tout Haïti',
+      subtitle: 'Explorez toutes les catégories disponibles sur KonbitMache et trouvez des produits d’agriculteurs de tout Haïti',
       sections: [
         {
           title: 'Aliments et récoltes',
@@ -89,7 +89,7 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
     },
     en: {
       title: 'Product categories',
-      subtitle: 'Explore all categories available on KonbitMache and find products from farmers and cooperatives across Haiti',
+      subtitle: 'Explore all categories available on KonbitMache and find products from farmers across Haiti',
       sections: [
         {
           title: 'Food and harvests',
@@ -109,88 +109,10 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
       ],
     },
   },
-  cooperativas: {
-    es: {
-      title: 'Cooperativas',
-      subtitle: 'Las cooperativas agrícolas son el corazón de la agricultura haitiana: unen productores, comparten recursos y logran mejores precios',
-      sections: [
-        {
-          title: '¿Qué es una cooperativa?',
-          paragraphs: ['Una cooperativa agrícola es una asociación de productores que trabajan juntos para comprar insumos, comercializar cosechas y acceder a financiamiento en mejores condiciones. En KonbitMache, las cooperativas publican sus productos con perfil de vendedor'],
-        },
-        {
-          title: 'Beneficios para el comprador',
-          paragraphs: ['Comprar a cooperativas significa volumen, calidad constante y trazabilidad. Es ideal para comerciantes, restaurantes y tiendas que necesitan abastecimiento regular'],
-          list: ['Volúmenes constantes', 'Precios justos', 'Producción trazable'],
-        },
-        {
-          title: 'Cómo unirse',
-          paragraphs: ['Si representas a una cooperativa, regístrate en KonbitMache, elige «Cooperativa» como tipo de cuenta y crea tu perfil. Después podrás publicar las cosechas de todos tus miembros'],
-        },
-      ],
-    },
-    ht: {
-      title: 'Koperativ',
-      subtitle: 'Koperativ agrikòl yo se kè agrikilti ayisyen: yo mete pwodiktè ansanm, yo pataje resous epi yo jwenn pi bon pri',
-      sections: [
-        {
-          title: 'Ki sa yon koperativ ye?',
-          paragraphs: ['Yon koperativ agrikòl se yon asosyasyon pwodiktè ki travay ansanm pou achte materyèl, komèsyalize rekòt yo epi jwenn finansman nan pi bon kondisyon. Sou KonbitMache, koperativ pibliye pwodui yo ak pwofil vandè'],
-        },
-        {
-          title: 'Benefis pou achtè',
-          paragraphs: ['Achte nan koperativ vle di volim, kalite konstan ak trasabilite. Li ideyal pou komèsan, restoran ak magazen ki bezwen apwovizyon regilye'],
-          list: ['Volim konstan', 'Pri jis', 'Pwodiksyon trasab'],
-        },
-        {
-          title: 'Kijan pou rantre',
-          paragraphs: ['Si ou reprezante yon koperativ, enskri w sou KonbitMache, chwazi «Koperativ» kòm kalite kont epi kreye pwofil ou. Apre sa, ou ka pibliye rekòt tout manm ou yo'],
-        },
-      ],
-    },
-    fr: {
-      title: 'Coopératives',
-      subtitle: 'Les coopératives agricoles sont le cœur de l’agriculture haïtienne : elles unissent les producteurs, partagent les ressources et obtiennent de meilleurs prix',
-      sections: [
-        {
-          title: 'Qu’est-ce qu’une coopérative ?',
-          paragraphs: ['Une coopérative agricole est une association de producteurs qui travaillent ensemble pour acheter des intrants, commercialiser les récoltes et accéder à un financement à de meilleures conditions. Sur KonbitMache, les coopératives publient leurs produits avec un profil de vendeur'],
-        },
-        {
-          title: 'Avantages pour l’acheteur',
-          paragraphs: ['Acheter aux coopératives signifie du volume, une qualité constante et de la traçabilité. Idéal pour les commerçants, restaurants et boutiques qui ont besoin d’un approvisionnement régulier'],
-          list: ['Volumes constants', 'Prix justes', 'Production traçable'],
-        },
-        {
-          title: 'Comment rejoindre',
-          paragraphs: ['Si vous représentez une coopérative, inscrivez-vous sur KonbitMache, choisissez « Coopérative » comme type de compte et créez votre profil. Vous pourrez ensuite publier les récoltes de tous vos membres'],
-        },
-      ],
-    },
-    en: {
-      title: 'Cooperatives',
-      subtitle: 'Agricultural cooperatives are the heart of Haitian farming: they unite producers, share resources and achieve better prices',
-      sections: [
-        {
-          title: 'What is a cooperative?',
-          paragraphs: ['An agricultural cooperative is an association of producers who work together to buy inputs, market harvests and access financing on better terms. On KonbitMache, cooperatives publish their products with a seller profile'],
-        },
-        {
-          title: 'Benefits for buyers',
-          paragraphs: ['Buying from cooperatives means volume, consistent quality and traceability. Ideal for merchants, restaurants and shops that need regular supply'],
-          list: ['Consistent volume', 'Fair prices', 'Traceable production'],
-        },
-        {
-          title: 'How to join',
-          paragraphs: ['If you represent a cooperative, register on KonbitMache, choose “Cooperative” as your account type and create your profile. You can then publish harvests from all your members'],
-        },
-      ],
-    },
-  },
   about: {
     es: {
       title: 'Acerca de KonbitMache',
-      subtitle: 'La plataforma que conecta a los agricultores y cooperativas de Haití con compradores de todo el país',
+      subtitle: 'La plataforma que conecta a los agricultores de Haití con compradores de todo el país',
       sections: [
         {
           title: 'Nuestra misión',
@@ -202,13 +124,13 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
         },
         {
           title: 'Nuestra presencia',
-          paragraphs: ['Estamos presentes en los diez departamentos de Haití, conectando agricultores, cooperativas y compradores en una sola red'],
+          paragraphs: ['Estamos presentes en los diez departamentos de Haití, conectando agricultores y compradores en una sola red'],
         },
       ],
     },
     ht: {
       title: 'Konsènan KonbitMache',
-      subtitle: 'Platfòm ki konekte peyizan ak koperativ Ayiti yo ak achtè nan tout peyi a',
+      subtitle: 'Platfòm ki konekte peyizan Ayiti yo ak achtè nan tout peyi a',
       sections: [
         {
           title: 'Misyon nou',
@@ -220,13 +142,13 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
         },
         {
           title: 'Prezans nou',
-          paragraphs: ['Nou prezan nan dis depatman Ayiti yo, konekte peyizan, koperativ ak achtè nan yon sèl rezo'],
+          paragraphs: ['Nou prezan nan dis depatman Ayiti yo, konekte peyizan ak achtè nan yon sèl rezo'],
         },
       ],
     },
     fr: {
       title: 'À propos de KonbitMache',
-      subtitle: 'La plateforme qui connecte les agriculteurs et coopératives d’Haïti aux acheteurs de tout le pays',
+      subtitle: 'La plateforme qui connecte les agriculteurs d’Haïti aux acheteurs de tout le pays',
       sections: [
         {
           title: 'Notre mission',
@@ -238,13 +160,13 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
         },
         {
           title: 'Notre présence',
-          paragraphs: ['Nous sommes présents dans les dix départements d’Haïti, connectant agriculteurs, coopératives et acheteurs dans un seul réseau'],
+          paragraphs: ['Nous sommes présents dans les dix départements d’Haïti, connectant agriculteurs et acheteurs dans un seul réseau'],
         },
       ],
     },
     en: {
       title: 'About KonbitMache',
-      subtitle: 'The platform connecting Haiti’s farmers and cooperatives with buyers across the country',
+      subtitle: 'The platform connecting Haiti’s farmers with buyers across the country',
       sections: [
         {
           title: 'Our mission',
@@ -256,7 +178,7 @@ export const sitePages: Record<SitePageKey, Record<Locale, SitePageContent>> = {
         },
         {
           title: 'Our presence',
-          paragraphs: ['We are present in all ten departments of Haiti, connecting farmers, cooperatives and buyers in one network'],
+          paragraphs: ['We are present in all ten departments of Haiti, connecting farmers and buyers in one network'],
         },
       ],
     },
@@ -541,21 +463,21 @@ export const blogPosts: Record<Locale, BlogPost[]> = {
   es: [
     { slug: 'vender-en-linea', title: 'Vender en línea: la nueva oportunidad del campo haitiano', excerpt: 'Cada vez más agricultores de Haití venden directo por internet. Te contamos cómo empezar y qué herramientas necesitas', date: '12 de julio de 2026', readTime: '4 min de lectura' },
     { slug: 'consejos-cosecha', title: '5 consejos para que tu cosecha se venda rápido', excerpt: 'Fotos claras, precios reales y descripciones honestas: pequeños detalles que marcan la diferencia en el marketplace', date: '28 de junio de 2026', readTime: '3 min de lectura' },
-    { slug: 'cooperativas-fuerza', title: 'Cooperativas: más fuerza trabajando juntos', excerpt: 'Unir a los productores de una región permite comprar mejor, vender mejor y planificar con seguridad', date: '10 de junio de 2026', readTime: '5 min de lectura' },
+    { slug: 'konbit-trabajo-campesino', title: 'Konbit: la fuerza del trabajo agrícola comunitario', excerpt: 'La tradición de apoyarse entre agricultores permite cosechar mejor, reducir costos y fortalecer la economía local', date: '10 de junio de 2026', readTime: '5 min de lectura' },
   ],
   ht: [
     { slug: 'vender-en-linea', title: 'Vann an liy: nouvo opòtinite jaden ayisyen an', excerpt: 'Pli plis peyizan Ayiti ap vann dirèk sou entènèt. Nou di w kijan pou kòmanse ak ki zouti ou bezwen', date: '12 jiyè 2026', readTime: '4 min lekti' },
     { slug: 'consejos-cosecha', title: '5 konsèy pou rekòt ou vann byen vit', excerpt: 'Foto klè, pri reyèl ak deskripsyon onèt: ti detay ki fè yon gwo diferans nan mache a', date: '28 jen 2026', readTime: '3 min lekti' },
-    { slug: 'cooperativas-fuerza', title: 'Koperativ: plis fòs lè w travay ansanm', excerpt: 'Mete pwodiktè yon rejyon ansanm pèmèt achte pi byen, vann pi byen ak planifye san pwoblèm', date: '10 jen 2026', readTime: '5 min lekti' },
+    { slug: 'konbit-trabajo-campesino', title: 'Konbit: fòs travay agrikòl nan kominote peyizan', excerpt: 'Tradisyon konbit la pèmèt peyizan yo travay ansanm, diminye depans epi devlope ekonomi lokal la', date: '10 jen 2026', readTime: '5 min lekti' },
   ],
   fr: [
     { slug: 'vender-en-linea', title: 'Vendre en ligne : la nouvelle opportunité du secteur agricole haïtien', excerpt: 'De plus en plus d’agriculteurs d’Haïti vendent directement en ligne. Comment commencer et quels outils vous faut-il', date: '12 juillet 2026', readTime: '4 min de lecture' },
     { slug: 'consejos-cosecha', title: '5 conseils pour vendre vite votre récolte', excerpt: 'Photos claires, prix réels et descriptions honnêtes : de petits détails qui font la différence sur la place de marché', date: '28 juin 2026', readTime: '3 min de lecture' },
-    { slug: 'cooperativas-fuerza', title: 'Coopératives : plus forts ensemble', excerpt: 'Unir les producteurs d’une région permet d’acheter mieux, vendre mieux et planifier en toute confiance', date: '10 juin 2026', readTime: '5 min de lecture' },
+    { slug: 'konbit-trabajo-campesino', title: 'Konbit : la force du travail agricole communautaire', excerpt: 'La tradition du konbit permet aux agriculteurs d’unir leurs forces, de réduire les coûts et de dynamiser l’économie locale', date: '10 juin 2026', readTime: '5 min de lecture' },
   ],
   en: [
     { slug: 'vender-en-linea', title: 'Selling online: a new opportunity for Haitian farming', excerpt: 'More and more Haitian farmers are selling directly online. Here is how to get started and what tools you need', date: 'July 12, 2026', readTime: '4 min read' },
     { slug: 'consejos-cosecha', title: '5 tips to sell your harvest fast', excerpt: 'Clear photos, real prices and honest descriptions: small details that make a big difference in the marketplace', date: 'June 28, 2026', readTime: '3 min read' },
-    { slug: 'cooperativas-fuerza', title: 'Cooperatives: stronger working together', excerpt: 'Bringing a region’s producers together means buying better, selling better and planning with confidence', date: 'June 10, 2026', readTime: '5 min read' },
+    { slug: 'konbit-trabajo-campesino', title: 'Konbit: the power of community farming in Haiti', excerpt: 'The tradition of working together helps farmers cut costs, harvest efficiently, and strengthen the local rural economy', date: 'June 10, 2026', readTime: '5 min read' },
   ],
 };

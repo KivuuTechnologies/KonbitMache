@@ -22,11 +22,11 @@ export function SiteFooter({ copy, locale }: SiteFooterProps) {
       links: [
         { label: copy.nav.marketplace, href: `/${locale}` },
         { label: copy.nav.categories, href: `/${locale}/categorias` },
-        { label: copy.nav.cooperatives, href: `/${locale}/cooperativas` },
+        { label: copy.nav.farmers, href: `/${locale}/vendedores` },
       ],
     },
     {
-      title: copy.footer.company,
+      title: copy.footer.resources,
       links: [
         { label: copy.footer.about, href: `/${locale}/acerca-de` },
         { label: copy.footer.contact, href: `/${locale}/contacto` },
@@ -59,12 +59,12 @@ export function SiteFooter({ copy, locale }: SiteFooterProps) {
               <NewsletterForm disabled />
             </div>
           </div>
-          {columns.map((column) => (
-            <div key={column.title}>
+          {columns.map((column, idx) => (
+            <div key={`${column.title}-${idx}`}>
               <h2 className="text-sm font-extrabold lg:text-base">{column.title}</h2>
               <ul className="mt-2 space-y-1 lg:mt-3 lg:space-y-2">
                 {column.links.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.href ?? link.label}>
                     <Link href={link.href!} className="flex min-h-8 items-center text-xs font-semibold text-muted transition hover:text-foreground lg:min-h-10 lg:text-sm">
                       {link.label}
                     </Link>

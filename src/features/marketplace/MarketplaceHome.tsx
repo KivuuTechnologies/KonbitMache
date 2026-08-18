@@ -88,17 +88,8 @@ function FeaturedSellersSection({
   const displayPlace = (s: TopSeller) =>
     [s.commune, s.department].filter(Boolean).join(' · ') || '—';
 
-  const sellerTypeLabel = (type: TopSeller['seller_type']) => {
-    switch (type) {
-      case 'farmer':
-        return copy.filters.farmer;
-      case 'cooperative':
-        return copy.filters.cooperative;
-      case 'company':
-        return copy.filters.company;
-      default:
-        return type;
-    }
+  const sellerTypeLabel = (_type: TopSeller['seller_type']) => {
+    return copy.filters.farmer;
   };
 
   return (
@@ -120,31 +111,29 @@ function FeaturedSellersSection({
       </div>
 
       {sellers.length === 0 ? (
-        <div className="grid gap-3 md:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-20 animate-pulse rounded-2xl bg-surface-muted" />
-          ))}
+        <div className="flex min-h-28 items-center justify-center rounded-2xl border border-dashed border-border/60 bg-surface-muted p-6 text-center text-sm text-muted">
+          <p>{copy.sections.farmers}</p>
         </div>
       ) : (
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sellers.map((seller) => (
             <article
               key={seller.id}
-              className="flex min-w-0 items-center gap-4 rounded-2xl bg-surface-muted p-4 sm:p-5"
+              className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/40 bg-surface-muted p-4 sm:p-5 transition hover:border-border"
             >
               <SellerAvatar
                 avatarUrl={seller.avatar_url}
                 name={displayName(seller)}
                 size="md"
               />
-              <div className="min-w-0">
-                <h3 className="break-words text-base font-extrabold">{displayName(seller)}</h3>
-                <p className="mt-1 text-xs text-muted">{sellerTypeLabel(seller.seller_type)}</p>
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate text-base font-extrabold">{displayName(seller)}</h3>
+                <p className="mt-0.5 text-xs font-semibold text-muted">{sellerTypeLabel(seller.seller_type)}</p>
                 <p className="mt-1 flex min-w-0 items-start gap-1 text-sm text-muted">
                   <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="break-words">{displayPlace(seller)}</span>
+                  <span className="truncate">{displayPlace(seller)}</span>
                 </p>
-                <p className="mt-0.5 text-xs text-muted">
+                <p className="mt-1 text-xs font-bold text-foreground">
                   {seller.active_product_count}{' '}
                   {seller.active_product_count === 1
                     ? copy.product.product

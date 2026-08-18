@@ -9,6 +9,9 @@ import type { Locale } from '@/i18n/config';
 import type { Metadata } from 'next';
 import { JsonLd, getWebSiteJsonLd } from '@/shared/seo/JsonLd';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface HomePageProps {
   params: Promise<{ locale: Locale }>;
   searchParams: Promise<{ category?: string }>;
@@ -16,10 +19,10 @@ interface HomePageProps {
 
 // Per-locale home page titles with target keywords
 const HOME_TITLES: Record<Locale, string> = {
-  ht: 'Mache agrikòl Ayiti — Achte ak vann pwodui lokal',
-  fr: 'Marché agricole Haïti — Achetez des produits locaux directement',
-  es: 'Mercado agrícola de Haití — Compra y vende productos locales',
-  en: 'Haiti Agricultural Marketplace — Buy & Sell Local Farm Products',
+  ht: 'Mache agrikòl Ayiti | Achte ak vann pwodui lokal',
+  fr: 'Marché agricole Haïti | Achetez des produits locaux directement',
+  es: 'Mercado agrícola de Haití | Compra y vende productos locales',
+  en: 'Haiti Agricultural Marketplace | Buy & Sell Local Farm Products',
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {

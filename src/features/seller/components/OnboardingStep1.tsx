@@ -27,18 +27,6 @@ export function OnboardingStep1({
       title: t.seller.onboarding.step1.farmer.title,
       desc: t.seller.onboarding.step1.farmer.desc,
     },
-    {
-      type: 'cooperative',
-      emoji: '🤝',
-      title: t.seller.onboarding.step1.cooperative.title,
-      desc: t.seller.onboarding.step1.cooperative.desc,
-    },
-    {
-      type: 'company',
-      emoji: '🏢',
-      title: t.seller.onboarding.step1.company.title,
-      desc: t.seller.onboarding.step1.company.desc,
-    },
   ];
 
   return (

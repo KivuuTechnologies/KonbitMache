@@ -7,22 +7,25 @@ import { logError } from '@/utils/logger/server';
 
 const SELLERS_COPY: Record<Locale, { title: string; description: string }> = {
   ht: {
-    title: 'Vandè ak Koperativ Agrikòl Ayiti',
-    description: 'Dekouvri kiltivatè, koperativ ak pwodiktè lokal nan tout depatman Ayiti',
+    title: 'Peyizan ak Vandè Agrikòl Ayiti',
+    description: 'Dekouvri kiltivatè ak pwodiktè lokal nan tout depatman Ayiti',
   },
   fr: {
-    title: 'Vendeurs et Coopératives Agricoles en Haïti',
-    description: 'Découvrez les agriculteurs, coopératives et producteurs locaux dans tous les départements d\'Haïti',
+    title: 'Agriculteurs et Vendeurs Agricoles en Haïti',
+    description: 'Découvrez les agriculteurs et producteurs locaux dans tous les départements d\'Haïti',
   },
   es: {
-    title: 'Vendedores y Cooperativas Agrícolas en Haití',
-    description: 'Descubre agricultores, cooperativas y productores locales en todos los departamentos de Haití',
+    title: 'Agricultores y Vendedores Agrícolas en Haití',
+    description: 'Descubre agricultores y productores locales en todos los departamentos de Haití',
   },
   en: {
-    title: 'Agricultural Sellers & Cooperatives in Haiti',
-    description: 'Discover local farmers, cooperatives, and agricultural producers across all departments of Haiti',
+    title: 'Farmers & Agricultural Sellers in Haiti',
+    description: 'Discover local farmers and agricultural producers across all departments of Haiti',
   },
 };
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface SellersPageProps {
   params: Promise<{ locale: Locale }>;
