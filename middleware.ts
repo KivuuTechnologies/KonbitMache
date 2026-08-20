@@ -47,10 +47,14 @@ export async function middleware(request: NextRequest) {
      }
 
      const urlLocale = pathname.split('/')[1];
+     const requestHeaders = new Headers(request.headers);
+     requestHeaders.set('x-pathname', pathname);
+
      if (urlLocale && isLocale(urlLocale)) {
+       requestHeaders.set('x-locale', urlLocale);
        const cookieLocale = request.cookies.get('konbit-language')?.value;
        if (cookieLocale !== urlLocale) {
-         const response = await updateSession(request);
+         const response = await updateSession(request, requestHeaders);
          response.cookies.set('konbit-language', urlLocale, {
            maxAge: 60 * 60 * 24 * 365,
            path: '/',
@@ -60,7 +64,7 @@ export async function middleware(request: NextRequest) {
        }
      }
 
-     return await updateSession(request);
+     return await updateSession(request, requestHeaders);
    } catch (error) {
      logError('[Middleware] Error:', error);
      return NextResponse.next({ request });

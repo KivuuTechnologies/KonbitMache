@@ -25,6 +25,8 @@ const organizationSchema = ({ description }: { description: string }) => ({
   ],
 });
 
+import { KofiFloatingWidget } from '@/features/site/components/KofiFloatingWidget';
+
 interface LocaleProvidersProps {
   children: React.ReactNode;
   locale: Locale;
@@ -38,6 +40,7 @@ export function LocaleProviders({ children, locale, t }: LocaleProvidersProps) {
         <AppProviders initialLocale={locale}>{children}</AppProviders>
       </ThemeProvider>
       <ObservabilityProvider />
+      <KofiFloatingWidget locale={locale} />
       <Script id="organization-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema({ description: t.site?.description ?? 'KonbitMache' })) }} />
     </>
   );

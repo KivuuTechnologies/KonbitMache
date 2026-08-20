@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { MessageCircle, Play, Sprout } from 'lucide-react';
 import type { MarketplaceCopy } from '@/shared/i18n/types';
-import { NewsletterForm } from './NewsletterForm';
+import { KofiSupportCard } from './KofiSupportCard';
 
 interface SiteFooterProps {
   copy: MarketplaceCopy;
@@ -45,27 +45,34 @@ export function SiteFooter({ copy, locale }: SiteFooterProps) {
 
   return (
     <footer id="contacto" className="border-t border-border/50 bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-10">
-          <div className="col-span-2 lg:col-span-1">
-            <Link href={`/${locale}`} className="flex items-center gap-2" aria-label="KonbitMache">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+        {/* Support Banner across width */}
+        <div className="mb-10 lg:mb-12">
+          <KofiSupportCard copy={copy} />
+        </div>
+
+        {/* Main Grid: Brand + 3 Nav Columns */}
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-10">
+          {/* Brand */}
+          <div className="col-span-2 lg:col-span-2">
+            <Link href={`/${locale}`} className="inline-flex items-center gap-2" aria-label="KonbitMache">
               <Sprout className="h-6 w-6 text-fey" aria-hidden="true" />
-              <span className="text-xl font-extrabold">KonbitMache</span>
+              <span className="text-xl font-extrabold text-foreground">KonbitMache</span>
             </Link>
-            <p className="mt-2 text-sm leading-5 text-muted">{copy.site.description}</p>
-            <div className="mt-4 rounded-2xl border border-border/50 bg-surface-muted px-4 py-5 sm:p-5 lg:mt-6 lg:p-6">
-              <h2 className="text-lg font-extrabold sm:text-xl lg:text-2xl">{copy.footer.newsletter.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted sm:text-base sm:leading-7 lg:text-base">{copy.footer.newsletter.description}</p>
-              <NewsletterForm disabled />
-            </div>
+            <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-muted">{copy.site.description}</p>
           </div>
+
+          {/* Navigation link columns */}
           {columns.map((column, idx) => (
-            <div key={`${column.title}-${idx}`}>
-              <h2 className="text-sm font-extrabold lg:text-base">{column.title}</h2>
-              <ul className="mt-2 space-y-1 lg:mt-3 lg:space-y-2">
+            <div key={`${column.title}-${idx}`} className="col-span-1">
+              <h2 className="text-sm font-extrabold text-foreground lg:text-base">{column.title}</h2>
+              <ul className="mt-3 space-y-2">
                 {column.links.map((link) => (
                   <li key={link.href ?? link.label}>
-                    <Link href={link.href!} className="flex min-h-8 items-center text-xs font-semibold text-muted transition hover:text-foreground lg:min-h-10 lg:text-sm">
+                    <Link
+                      href={link.href!}
+                      className="inline-flex min-h-7 items-center text-xs font-semibold text-muted transition hover:text-foreground lg:text-sm"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -74,14 +81,16 @@ export function SiteFooter({ copy, locale }: SiteFooterProps) {
             </div>
           ))}
         </div>
-        <div className="mt-6 flex flex-col gap-3 border-t border-border/50 pt-4 sm:flex-row sm:items-center sm:justify-between lg:mt-10 lg:pt-6">
+
+        {/* Bottom bar */}
+        <div className="mt-10 flex flex-col gap-3 border-t border-border/50 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted/70">© 2026 KonbitMache · {copy.footer.rights}</p>
           <div className="flex items-center gap-2">
-            <a href="https://www.facebook.com" className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/50 text-muted transition hover:bg-surface-muted hover:text-foreground lg:h-10 lg:w-10 lg:rounded-xl" aria-label="Facebook">
-              <MessageCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
+            <a href="https://www.facebook.com" className="flex h-9 w-9 items-center justify-center rounded-xl border border-border/50 text-muted transition hover:bg-surface-muted hover:text-foreground" aria-label="Facebook">
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
             </a>
-            <a href="https://www.youtube.com" className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/50 text-muted transition hover:bg-surface-muted hover:text-foreground lg:h-10 lg:w-10 lg:rounded-xl" aria-label="YouTube">
-              <Play className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
+            <a href="https://www.youtube.com" className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/50 text-muted transition hover:bg-surface-muted hover:text-foreground" aria-label="YouTube">
+              <Play className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
         </div>

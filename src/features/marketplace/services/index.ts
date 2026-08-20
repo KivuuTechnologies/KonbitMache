@@ -10,6 +10,8 @@ export interface PublicProduct extends Product {
   seller_location?: {
     department: string | null;
     commune: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
   };
 }
 
@@ -155,79 +157,19 @@ export async function getTopSellers(limit = 3): Promise<TopSeller[]> {
     const supabase = await createAnonSupabaseClient();
     if (!supabase) return [];
 
-    // 1. Try RPC first
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase.rpc as any)('get_top_sellers', {
       p_limit: limit,
     });
 
-    if (!error && Array.isArray(data) && data.length > 0) {
-      return data as TopSeller[];
-    }
-
     if (error) {
-      logError('[getTopSellers] RPC error, falling back to direct profiles query:', error.message);
-    }
-
-    // 2. Fallback: Direct query on profiles table excluding admins
-    const { data: profData, error: profError } = await supabase
-      .from('profiles')
-      .select('id, full_name, business_name, seller_type, department, commune, avatar_url, phone, whatsapp, is_admin, created_at')
-      .eq('profile_status', 'active')
-      .order('created_at', { ascending: false })
-      .limit(limit * 2);
-
-    if (profError || !profData) {
-      if (profError) logError('[getTopSellers] Direct profiles query error:', profError.message);
+      logError('[getTopSellers] RPC error:', error.message);
       return [];
     }
 
-    const nonAdminSellers = profData
-      .filter((p: { is_admin?: boolean }) => !p.is_admin)
-      .slice(0, limit);
+    if (!data) return [];
 
-    // Get active products count for these sellers
-    const sellerIds = nonAdminSellers.map((s: { id: string }) => s.id);
-    const countBySeller = new Map<string, number>();
-
-    if (sellerIds.length > 0) {
-      const { data: prodData } = await supabase
-        .from('products')
-        .select('seller_id')
-        .in('seller_id', sellerIds)
-        .eq('status', 'active');
-
-      if (prodData) {
-        for (const item of prodData as { seller_id: string }[]) {
-          countBySeller.set(item.seller_id, (countBySeller.get(item.seller_id) || 0) + 1);
-        }
-      }
-    }
-
-    return nonAdminSellers.map((s: {
-      id: string;
-      full_name: string | null;
-      business_name: string | null;
-      seller_type: 'farmer' | 'cooperative' | 'company';
-      department: string | null;
-      commune: string | null;
-      avatar_url: string | null;
-      phone: string | null;
-      whatsapp: string | null;
-      created_at: string;
-    }) => ({
-      id: s.id,
-      full_name: s.full_name,
-      business_name: s.business_name,
-      seller_type: s.seller_type || 'farmer',
-      department: s.department,
-      commune: s.commune,
-      avatar_url: s.avatar_url,
-      phone: s.phone,
-      whatsapp: s.whatsapp,
-      active_product_count: countBySeller.get(s.id) || 0,
-      created_at: s.created_at,
-    })) as TopSeller[];
+    return data as TopSeller[];
   } catch (err) {
     logError('[getTopSellers] unexpected error:', err);
     return [];

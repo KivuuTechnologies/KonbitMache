@@ -9,13 +9,14 @@ const REMEMBER_ME_COOKIE = 'konbit-remember';
 const REMEMBERED_SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const SESSION_MAX_AGE = 60 * 60 * 8;
 
-export async function updateSession(request: NextRequest) {
+export async function updateSession(request: NextRequest, customHeaders?: Headers) {
+  const requestHeaders = customHeaders ?? request.headers;
   const initialLocale =
     toSupportedLocale(request.cookies.get(LOCALE_COOKIE)?.value) ??
     detectLocale(request.headers.get('accept-language'));
 
   if (!hasSupabaseEnvironment()) {
-    const response = NextResponse.next({ request });
+    const response = NextResponse.next({ request: { headers: requestHeaders } });
     response.cookies.set(LOCALE_COOKIE, initialLocale, {
       maxAge: 60 * 60 * 24 * 365,
       path: '/',
@@ -25,7 +26,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   const { url, publishableKey } = getSupabaseEnvironment();
-  let response = NextResponse.next({ request });
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
   const sessionCookieMaxAge = request.cookies.get(REMEMBER_ME_COOKIE)?.value === '1'
     ? REMEMBERED_SESSION_MAX_AGE
     : SESSION_MAX_AGE;
