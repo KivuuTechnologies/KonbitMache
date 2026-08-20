@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Sprout, ArrowLeft } from 'lucide-react';
+import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: '404 | KonbitMache',
@@ -53,7 +54,20 @@ interface PageProps { params?: Promise<{ locale: string }>; }
  * Falls back to Haitian Kreyòl if the locale is not recognised
  */
 export default async function LocaleNotFound({ params }: PageProps) {
-  const { locale } = (await params) ?? { locale: "ht" };
+  let locale = params ? (await params)?.locale : undefined;
+
+  if (!locale || !isSupportedLocale(locale)) {
+    const headerStore = await headers();
+    const headerLocale = headerStore.get('x-locale');
+    if (headerLocale && isSupportedLocale(headerLocale)) {
+      locale = headerLocale;
+    } else {
+      const pathname = headerStore.get('x-pathname') || headerStore.get('next-url') || '';
+      const match = pathname.match(/^\/(ht|es|fr|en)(\/|$)/);
+      locale = match && match[1] && isSupportedLocale(match[1]) ? match[1] : 'ht';
+    }
+  }
+
   const t = isSupportedLocale(locale) ? copy[locale] : copy.ht;
   const homeHref = `/${locale}`;
   const categoriesHref = `/${locale}/categorias`;

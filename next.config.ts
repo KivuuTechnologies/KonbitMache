@@ -3,11 +3,12 @@ import type { NextConfig } from 'next';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://www.clarity.ms`,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://images.unsplash.com https://tile.openstreetmap.org https://*.supabase.co",
-  "font-src 'self' data:",
-  `connect-src 'self'${isDevelopment ? ' ws: http:' : ''} https://tile.openstreetmap.org https://www.google-analytics.com https://www.clarity.ms https://*.supabase.co`,
+  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://www.clarity.ms https://storage.ko-fi.com https://ko-fi.com`,
+  "style-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://tile.openstreetmap.org https://*.supabase.co https://storage.ko-fi.com https://ko-fi.com https://cdn.ko-fi.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  `connect-src 'self'${isDevelopment ? ' ws: http:' : ''} https://tile.openstreetmap.org https://www.google-analytics.com https://www.clarity.ms https://*.supabase.co https://storage.ko-fi.com https://ko-fi.com`,
+  "frame-src 'self' https://ko-fi.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",

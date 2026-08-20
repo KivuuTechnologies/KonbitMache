@@ -14,7 +14,7 @@ function isValidPhone(val: string): boolean {
 }
 
 export const onboardingStep1Schema = z.object({
-  seller_type: z.enum(['farmer', 'cooperative', 'company']),
+  seller_type: z.literal('farmer'),
   business_name: z
     .string()
     .max(100, 'Name cannot exceed 100 characters')
@@ -49,7 +49,7 @@ export const onboardingStep4Schema = z.object({
 });
 
 export const completeOnboardingSchema = z.object({
-  seller_type: z.enum(['farmer', 'cooperative', 'company']),
+  seller_type: z.literal('farmer'),
   business_name: z.string().optional(),
   department: z.string().min(1),
   commune: z.string().min(1),

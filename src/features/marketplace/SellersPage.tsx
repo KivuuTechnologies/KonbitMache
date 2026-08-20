@@ -19,17 +19,8 @@ export function SellersPage({ sellers }: SellersPageProps) {
   const displayPlace = (s: TopSeller) =>
     [s.commune, s.department].filter(Boolean).join(' · ') || '—';
 
-  const sellerTypeLabel = (type: TopSeller['seller_type']) => {
-    switch (type) {
-      case 'farmer':
-        return t.filters.farmer;
-      case 'cooperative':
-        return t.filters.cooperative;
-      case 'company':
-        return t.filters.company;
-      default:
-        return type;
-    }
+  const sellerTypeLabel = (_type: TopSeller['seller_type']) => {
+    return t.filters.farmer;
   };
 
   return (

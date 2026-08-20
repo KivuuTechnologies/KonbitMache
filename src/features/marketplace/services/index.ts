@@ -10,6 +10,8 @@ export interface PublicProduct extends Product {
   seller_location?: {
     department: string | null;
     commune: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
   };
 }
 

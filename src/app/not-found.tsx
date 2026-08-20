@@ -49,13 +49,29 @@ function isSupportedLocale(value: string): value is SupportedLocale {
 }
 
 async function detectLocale(): Promise<string> {
+  const headerStore = await headers();
+
+  // 1. Explicit locale header set by middleware
+  const headerLocale = headerStore.get('x-locale');
+  if (headerLocale && isLocale(headerLocale)) {
+    return headerLocale;
+  }
+
+  // 2. Extract locale from URL pathname (e.g. /ht, /es, /fr, /en)
+  const pathname = headerStore.get('x-pathname') || headerStore.get('next-url') || '';
+  const match = pathname.match(/^\/(ht|es|fr|en)(\/|$)/);
+  if (match && match[1] && isLocale(match[1])) {
+    return match[1];
+  }
+
+  // 3. User cookie preference
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('konbit-language')?.value;
   if (cookieLocale && isLocale(cookieLocale)) {
     return cookieLocale;
   }
 
-  const headerStore = await headers();
+  // 4. Accept-Language negotiation fallback
   const negotiatorHeaders: Record<string, string> = {};
   headerStore.forEach((value, key) => (negotiatorHeaders[key] = value));
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages();

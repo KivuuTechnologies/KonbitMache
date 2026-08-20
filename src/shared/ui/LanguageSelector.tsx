@@ -2,7 +2,7 @@
 
 import { Globe2 } from 'lucide-react';
 import type { ChangeEvent } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { SUPPORTED_LOCALES, type Locale } from '@/shared/i18n/types';
 import { useLanguage } from '@/shared/i18n/LanguageProvider';
 import { useTranslations } from '@/shared/i18n/useTranslations';
@@ -14,7 +14,6 @@ export function LanguageSelector() {
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const nextLocale = event.target.value as Locale;
@@ -26,10 +25,10 @@ export function LanguageSelector() {
     }
 
     const nextPathname = segments.join('/') || `/${nextLocale}`;
-    const nextSearch = searchParams.toString();
+    const nextSearch = typeof window !== 'undefined' ? window.location.search : '';
 
     setLocale(nextLocale);
-    router.push(nextSearch ? `${nextPathname}?${nextSearch}` : nextPathname);
+    router.push(nextSearch ? `${nextPathname}${nextSearch}` : nextPathname);
   };
 
   return (
