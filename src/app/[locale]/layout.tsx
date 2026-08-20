@@ -43,6 +43,10 @@ export async function generateMetadata({
   };
 }
 
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -58,14 +62,8 @@ export default async function LocaleLayout({
 
   const t = translations[locale];
   return (
-    // Set the correct html lang per locale so search engines and screen readers
-    // know the page language without waiting for JavaScript
-    <html lang={locale} suppressHydrationWarning>
-      <body className="flex min-h-full flex-col">
-        <LocaleProviders locale={locale} t={t}>
-          {children}
-        </LocaleProviders>
-      </body>
-    </html>
+    <LocaleProviders locale={locale} t={t}>
+      {children}
+    </LocaleProviders>
   );
 }

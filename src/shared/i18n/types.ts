@@ -28,7 +28,20 @@ export interface MarketplaceCopy {
   sections: { featured: string; recent: string; wanted: string; farmers: string; featuredSellers: string; map: string; mapDescription: string; mapOffers: string; dominantOffer: string; priorityZone: string; agriculturalZones: string; stats: string; ctaTitle: string; ctaDescription: string };
   product: { available: string; published: string; whatsapp: string; call: string; callModalTitle: string; callModalHint: string; callNow: string; callModalClose: string; quantity: string; product: string; products: string; demo: string; share: string; save: string; viewAll: string; previousImage: string; nextImage: string; description: string; };
   stats: { farmers: string; departments: string; interested: string; unavailable: string };
-  footer: { marketplace: string; support: string; resources: string; about: string; contact: string; help: string; privacy: string; blog: string; language: string; rights: string; comingSoon: string; newsletter: { title: string; description: string; emailPlaceholder: string; subscribe: string; success: string; error: string } };
+  footer: {
+    marketplace: string;
+    support: string;
+    resources: string;
+    about: string;
+    contact: string;
+    help: string;
+    privacy: string;
+    blog: string;
+    language: string;
+    rights: string;
+    comingSoon: string;
+    supportUs: { badge: string; title: string; description: string; buttonText: string };
+  };
   common: { language: string; light: string; dark: string; useLight: string; useDark: string; skipToContent: string };
   site: { description: string };
   auth: AuthCopy;

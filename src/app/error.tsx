@@ -46,7 +46,9 @@ function detectClientLocale(): string {
   if (typeof window === 'undefined') return 'ht';
 
   const pathMatch = window.location.pathname.match(/^\/(ht|es|fr|en)(\/|$)/);
-  if (pathMatch && pathMatch[1]) return pathMatch[1];
+  if (pathMatch && pathMatch[1] && isSupportedLocale(pathMatch[1])) {
+    return pathMatch[1];
+  }
 
   const cookieMatch = document.cookie.match(/(?:^|;\s*)konbit-language=([^;]+)/);
   if (cookieMatch && cookieMatch[1] && isSupportedLocale(cookieMatch[1])) {
@@ -54,15 +56,15 @@ function detectClientLocale(): string {
   }
 
   const navLang = navigator.language?.toLowerCase() ?? '';
-  if (navLang.startsWith('es')) return 'es';
-  if (navLang.startsWith('fr')) return 'fr';
   if (navLang.startsWith('ht') || navLang.startsWith('cre')) return 'ht';
+  if (navLang.startsWith('fr')) return 'fr';
+  if (navLang.startsWith('es')) return 'es';
   if (navLang.startsWith('en')) return 'en';
 
   return 'ht';
 }
 
-export default function GlobalError({ error, reset }: GlobalErrorProps) {
+export default function RootError({ error, reset }: GlobalErrorProps) {
   const [locale] = useState<SupportedLocale>(() => {
     if (typeof window !== 'undefined') {
       const detected = detectClientLocale();
@@ -72,48 +74,46 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   });
 
   useEffect(() => {
-    devError('[GlobalError]', error);
+    devError('[RootError]', error);
   }, [error]);
 
   const t = copy[locale];
 
   return (
-    <html lang={locale}>
-      <body className="flex min-h-screen flex-col items-center justify-center bg-surface px-6 text-center text-foreground">
-        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-fey/10">
-          <Sprout className="h-8 w-8 text-fey" aria-hidden="true" />
-        </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-surface px-6 text-center text-foreground">
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-fey/10">
+        <Sprout className="h-8 w-8 text-fey" aria-hidden="true" />
+      </div>
 
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-danger-bg">
-          <AlertTriangle className="h-6 w-6 text-danger" aria-hidden="true" />
-        </div>
+      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-danger-bg">
+        <AlertTriangle className="h-6 w-6 text-danger" aria-hidden="true" />
+      </div>
 
-        <p className="text-[clamp(4rem,16vw,7rem)] font-extrabold leading-none tracking-tighter text-foreground/10 select-none">
-          500
+      <p className="text-[clamp(4rem,16vw,7rem)] font-extrabold leading-none tracking-tighter text-foreground/10 select-none">
+        500
+      </p>
+
+      <h1 className="mt-2 text-2xl font-extrabold tracking-tight">
+        {t.title}
+      </h1>
+      <p className="mt-3 max-w-sm text-base leading-7 text-muted">
+        {t.body}
+      </p>
+
+      {error.digest && (
+        <p className="mt-2 rounded-lg bg-surface-muted px-3 py-1 font-mono text-xs text-muted/60">
+          {t.codeLabel}: {error.digest}
         </p>
+      )}
 
-        <h1 className="mt-2 text-2xl font-extrabold tracking-tight">
-          {t.title}
-        </h1>
-        <p className="mt-3 max-w-sm text-base leading-7 text-muted">
-          {t.body}
-        </p>
-
-        {error.digest && (
-          <p className="mt-2 rounded-lg bg-surface-muted px-3 py-1 font-mono text-xs text-muted/60">
-            {t.codeLabel}: {error.digest}
-          </p>
-        )}
-
-        <button
-          type="button"
-          onClick={reset}
-          className="mt-8 flex min-h-12 items-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-white shadow-sm transition hover:bg-accent-strong dark:text-background"
-        >
-          <RefreshCw className="h-4 w-4" aria-hidden="true" />
-          {t.retry}
-        </button>
-      </body>
-    </html>
+      <button
+        type="button"
+        onClick={reset}
+        className="mt-8 flex min-h-12 items-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-white shadow-sm transition hover:bg-accent-strong dark:text-background"
+      >
+        <RefreshCw className="h-4 w-4" aria-hidden="true" />
+        {t.retry}
+      </button>
+    </div>
   );
 }
