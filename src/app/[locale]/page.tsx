@@ -9,8 +9,7 @@ import type { Locale } from '@/i18n/config';
 import type { Metadata } from 'next';
 import { JsonLd, getWebSiteJsonLd } from '@/shared/seo/JsonLd';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 interface HomePageProps {
   params: Promise<{ locale: Locale }>;

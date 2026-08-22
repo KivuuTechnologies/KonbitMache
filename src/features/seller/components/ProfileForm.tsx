@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Loader2, Save } from 'lucide-react';
 import { profileSchema, type ProfileFormData } from '@/features/seller/schemas';
 import { haitiDepartments } from '@/features/seller/services/mocks';
+import { getDepartmentLabel } from '@/shared/data/haitiDepartmentLabels';
 import { useTranslations } from '@/shared/i18n/useTranslations';
 import { createClient } from '../../../../utils/supabase/client';
 import type { SellerType } from '@/features/seller/types';
@@ -197,7 +198,7 @@ export function ProfileForm({ locale, initialData }: ProfileFormProps) {
             >
               <option value="">{t.seller.profile.department}</option>
               {haitiDepartments.map((dept) => (
-                <option key={dept} value={dept}>{dept}</option>
+                <option key={dept} value={dept}>{getDepartmentLabel(dept)}</option>
               ))}
             </select>
             {form.formState.errors.department && (

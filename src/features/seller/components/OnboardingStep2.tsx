@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from '@/shared/i18n/useTranslations';
+import { getDepartmentLabel } from '@/shared/data/haitiDepartmentLabels';
 import { HAITI_DEPARTMENTS, HAITI_LOCATIONS } from '../data/haitiLocations';
 
 interface OnboardingStep2Props {
@@ -56,7 +57,7 @@ export function OnboardingStep2({
             <option value="">{t.seller.onboarding.step2.departmentPlaceholder}</option>
             {HAITI_DEPARTMENTS.map((dept) => (
               <option key={dept} value={dept}>
-                {dept}
+                {getDepartmentLabel(dept)}
               </option>
             ))}
           </select>

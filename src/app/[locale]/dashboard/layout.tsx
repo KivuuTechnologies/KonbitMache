@@ -15,7 +15,7 @@ export default async function DashboardLayout({
   const { locale } = await params;
 
   // Admins only use the admin panel — redirect them away from the whole
-  // seller dashboard. The real authorization lives in Supabase; this is UX.
+  // seller dashboard. The real authorization lives in Supabase; this is UX
   if (hasSupabaseEnvironment()) {
     const supabase = await createClient();
     const { data } = await supabase.auth.getClaims();
