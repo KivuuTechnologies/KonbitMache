@@ -7,11 +7,11 @@ import type { UnitSlug } from './types';
  * translated in the DB. This helper picks the correct localized label based
  * on the current locale and the quantity:
  *
- *   1 bolsa   (quantity === 1  -> singular label)
- *   10 bolsas (quantity !== 1  -> plural label)
+ *   1 bolsa   (quantity === 1  - singular label)
+ *   10 bolsas (quantity !== 1  - plural label)
  *
  * Locale-aware pluralization rule:
- *   - ht:  no plural inflection -> singular label is always used
+ *   - ht:  no plural inflection - singular label is always used
  *   - fr, es, en: quantity === 1 uses singular, otherwise plural
  *
  * @param quantity  The product quantity (should be >= 1)

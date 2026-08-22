@@ -24,8 +24,7 @@ const SELLERS_COPY: Record<Locale, { title: string; description: string }> = {
   },
 };
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 interface SellersPageProps {
   params: Promise<{ locale: Locale }>;

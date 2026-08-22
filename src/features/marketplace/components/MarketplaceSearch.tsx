@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { CategoryIcon } from './CategoryIcon';
 import type { CategoryKey } from '@/shared/i18n/types';
 import type { PublicProduct } from '@/features/marketplace/services';
+import { getDepartmentLabel } from '@/shared/data/haitiDepartmentLabels';
 
 const DEPARTMENTS = [
   'Artibonite',
@@ -115,7 +116,7 @@ export function MarketplaceSearch({ locale, onSearch, activeFilters, embedded = 
             <option value="">{t.hero.department}</option>
             {DEPARTMENTS.map((d) => (
               <option key={d} value={d}>
-                {d}
+                {getDepartmentLabel(d)}
               </option>
             ))}
           </select>
@@ -131,7 +132,7 @@ export function MarketplaceSearch({ locale, onSearch, activeFilters, embedded = 
           <svg className="h-4 w-4" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <path d="M18 6 6 18M6 6l12 12" />
           </svg>
-          Limpiar filtros
+          {t.filters.clear}
         </button>
       )}
 

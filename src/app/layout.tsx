@@ -69,10 +69,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="mul" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        {/* Preconnect to external tile and image CDNs for faster LCP */}
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://tile.openstreetmap.org" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://storage.ko-fi.com" />
       </head>
       <body className="flex min-h-full flex-col">
         {children}

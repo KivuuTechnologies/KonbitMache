@@ -21,12 +21,12 @@
  * @example
  *   // Seller wrote in ht, buyer reads in en, no EN translation yet
  *   getTranslatedField({ ht: 'Kafe mòn' }, 'en', 'ht', 'Kafe mòn')
- *   // -> 'Kafe mòn'  (falls back to source_locale = ht, then to original)
+ *   // - 'Kafe mòn'  (falls back to source_locale = ht, then to original)
  *
  * @example
  *   // Translation exists for buyer's locale
  *   getTranslatedField({ ht: 'Kafe mòn', en: 'Mountain Coffee' }, 'en', 'ht', 'Kafe mòn')
- *   // -> 'Mountain Coffee'
+ *   // - 'Mountain Coffee'
  */
 export function getTranslatedField(
   translations: Record<string, string | undefined | null> | null | undefined,

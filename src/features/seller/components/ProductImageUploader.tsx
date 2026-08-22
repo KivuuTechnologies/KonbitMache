@@ -184,11 +184,11 @@ export function ProductImageUploader({
       let result: { ok: boolean; message?: string };
 
       if (productId) {
-        // Case A: image is persisted in an existing product.
+        // Case A: image is persisted in an existing product
         // Server Action: UPDATE DB first, then DELETE from Storage
         result = await deleteProductImageAction(productId, slot.uploadedUrl);
       } else {
-        // Case B: image was uploaded but no product row exists yet.
+        // Case B: image was uploaded but no product row exists yet
         // Server Action: DELETE from Storage only (no DB row to update)
         result = await deleteOrphanImageAction(slot.uploadedUrl);
       }

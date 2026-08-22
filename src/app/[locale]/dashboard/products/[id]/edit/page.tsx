@@ -24,7 +24,7 @@ export default async function EditProductPage({
   if (!product) notFound();
 
   // A product withdrawn by an admin can no longer be edited — only deleted and
-  // republished correctly. Send the seller back to their product list.
+  // republished correctly. Send the seller back to their product list
   const moderations = await dashboardService.getProductModerations([product.id]);
   if (moderations[product.id]) redirect(`/${locale}/dashboard/products`);
 
@@ -51,7 +51,7 @@ export default async function EditProductPage({
                   quantity: product.quantity,
                   image_url: product.image_url ?? '',
                   // Pass image_urls; fall back to wrapping the legacy image_url
-                  // so the uploader always has something to show for existing products.
+                  // so the uploader always has something to show for existing products
                   image_urls:
                     product.image_urls && product.image_urls.length > 0
                       ? product.image_urls
