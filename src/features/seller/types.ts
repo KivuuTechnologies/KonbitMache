@@ -122,9 +122,9 @@ export interface Product {
    * does not exist yet - NULL for products created before this column existed
    */
   source_locale: string | null;
-  /** jsonb: locale -> translated name - Empty object when no translations exist */
+  /** jsonb: locale - translated name - Empty object when no translations exist */
   name_translations: ProductTranslations;
-  /** jsonb: locale -> translated description - Empty object when no translations exist */
+  /** jsonb: locale - translated description - Empty object when no translations exist */
   desc_translations: ProductTranslations;
   created_at: string;
   updated_at: string;

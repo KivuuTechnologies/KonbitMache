@@ -188,7 +188,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const goTo = (i: number) => navigateTo(i);
 
   // Track a view when the buyer opens the detail modal. Best-effort: a missing
-  // tracking table or transient failure never blocks opening the modal.
+  // tracking table or transient failure never blocks opening the modal
   const openDetail = () => {
     setShowDetailModal(true);
     setInterestLoading(true);

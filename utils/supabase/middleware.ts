@@ -25,6 +25,13 @@ export async function updateSession(request: NextRequest, customHeaders?: Header
     return response;
   }
 
+  // Fast-path: Anonymous public visitors have no sb-* auth cookies.
+  // Bypass heavy Supabase client instantiation and network calls for instant TTFB.
+  const hasAuthCookie = request.cookies.getAll().some((c) => c.name.startsWith('sb-'));
+  if (!hasAuthCookie) {
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   const { url, publishableKey } = getSupabaseEnvironment();
   let response = NextResponse.next({ request: { headers: requestHeaders } });
   const sessionCookieMaxAge = request.cookies.get(REMEMBER_ME_COOKIE)?.value === '1'

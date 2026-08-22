@@ -2,7 +2,7 @@ export const SUPPORTED_LOCALES = ['ht', 'fr', 'es', 'en'] as const;
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 export type CategoryKey = 'fruits' | 'grains' | 'vegetables' | 'coffee' | 'livestock' | 'spices' | 'seeds' | 'tools' | 'agricultural_equipment' | 'machinery' | 'drones' | 'fertilizers' | 'irrigation' | 'agricultural_services';
-/** Stable unit slugs stored in products.unit - never translated values*/
+// Stable unit slugs stored in products.unit - never translated values
 export type UnitSlug = 'kg' | 'lb' | 'unit' | 'bag' | 'box' | 'liter' | 'ton';
 export type AuthValidationKey = 'required' | 'invalidEmail' | 'passwordMinLength' | 'passwordMismatch';
 export type AuthErrorKey = 'invalidCredentials' | 'emailNotConfirmed' | 'emailAlreadyRegistered' | 'passwordRequirements' | 'rateLimited' | 'sessionExpired' | 'oauthUnavailable' | 'generic';

@@ -23,7 +23,7 @@ export async function getCurrentProfile(): Promise<SellerProfile> {
   if (error || !data) return { ...mockSellerProfile };
 
   // data comes from an untyped Supabase query (types not yet generated),
-  // so we cast via unknown to satisfy the strict SellerProfile contract.
+  // so we cast via unknown to satisfy the strict SellerProfile contract
   const row = data as Record<string, unknown>;
 
   return {
